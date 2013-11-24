@@ -12,6 +12,13 @@
 
 <body>
 	
+	<?php
+		for ($i = 0; $i < 10; $i++)
+		{
+			print $i;
+		}
+	?>
+	
 	<form id="convert-form">
 		<div>
 			<label for="hex">HEX:</label>
@@ -53,18 +60,14 @@
 		</div>
 	</form>
 	
+	<form enctype="multipart/form-data" action="drop.php" method="POST">
+		<input type="file" name="file" />
+		<input type="submit" />
+	</form>
+	
 	<div id="swatch" style="width: 100px; height: 100px;"></div>
 	
-	<div id="drop" style="background-color: pink; width: 400px; height: 400px;">
-		<!--
-		<form action="/file-upload" class="dropzone" id="drop-file" style="background-color: pink; width: 400px; height: 400px;">
-			<div class="fallback">
-				<input name="file" type="file" multiple />
-			</div>
-		</form>
-		-->
-		Drag and drop an image here, or click to select one.
-	</div>
+	<form enctype="multipart/form-data" action="drop.php" class="dropzone" id="my-awesome-dropzone" style="width: 400px; height: 400px; background-color: pink;"></form>
 	
 </body>
 

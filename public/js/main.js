@@ -3,6 +3,7 @@ $(document).ready(function(){
 	initHandleSubmit();
 	
 	// configure dropzone
+	/*
 	$("div#drop").dropzone({
 		url: "/file/post",
 		init: function() {
@@ -11,6 +12,7 @@ $(document).ready(function(){
 			});
 		}
 	});
+	*/
 });
 
 var hexLetterKey = [
