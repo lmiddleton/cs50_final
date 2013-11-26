@@ -47,6 +47,8 @@
   			$im = imagecreatefromjpeg("upload/" . $_FILES["file"]["name"]);
   			
   			$colors = array();
+  			$color_counts = array();
+  			$top_colors = array();
   			$pixel_count = 0;
   			$repeats = 0;
   			
@@ -62,41 +64,85 @@
   					$b = $icfi["blue"];
   					$pixel_count++;
   					
-  					// iterate over colors array to check if color exists already in array
-  					// if no colors yet, add the first
-  					//if (empty($colors))
-  					//{
-  					//	$colors[$pixel_count] = $icfi;
-  					//}
-  					
-  					//else
-  					//{
-  					//foreach ($colors as $color)
-  					//{
-  						//$cr = $color["red"];
-  						//$cg = $color["green"];
-  						//$cb = $color["blue"];
-  						//if ($r == $cr && $g == $cg && $b == $cb)
-  						//{
-  						//	$repeats++;
-  						//}
-  						//else
-  						//{
-  							// add color to array using its rgb string as a key to avoid duplicates
-  							$colors[$r . $g . $b] = $icfi;
-  						//}
-  					//}
-  					//}
+  					// add color to array using its rgb string as a key to avoid duplicates
+  					$colors[$r . $g . $b] = $icfi;
+  							
+  					// count occurance of each color
+  					if (empty($color_counts[$r . "," . $g . "," . $b]))
+  					{
+  						$color_counts[$r . "," . $g . "," . $b] = 1;
+  					}
+  					else
+  					{
+  						$color_counts[$r . "," . $g . "," . $b] = $color_counts[$r . "," . $g . "," . $b] + 1;
+  					}
+  							
   				}
   			}
   			
-  			//foreach ($colors as $color)
-  			//{
-  			//	dump($color);
-  			//}
+  			// this works
+  			/*
+  			foreach ($color_counts as $key => $value)
+  			{
+  				$val = $value;
+  				if ($val > 50)
+  				{
+  					//dump($val);
+  					$top_colors[] = $key;
+  				}
+  				//dump($val);
+  			}
+  			*/
   			
-  			//dump($colors);
-  			render("palette.php", ["colors" => $colors]);
+  			//dump($color_counts);
+  			
+  			$test_count = 0;
+  			
+  			foreach ($color_counts as $key => $value)
+  			{
+  				$test_count++;
+  				if (empty($top_colors))
+  				{
+  					$top_colors[] = $key;
+  				}
+  				else
+  				{
+  					$rgb = explode(",", $key);
+  					$r = $rgb[0];
+  					$g = $rgb[1];
+  					$b = $rgb[2];
+  					
+  					$unique = true;
+  					
+  					foreach ($top_colors as $key2 => $value2)
+  					{
+  						//dump($value2);
+  						$rgb_t = explode(",", $value2);
+  						//dump($rgb_t);
+  						$r_diff = abs($r - $rgb_t[0]);
+  						//dump($r_diff);
+  						$g_diff = abs($g - $rgb_t[1]);
+  						$b_diff = abs($b - $rgb_t[2]);  
+  						//dump($b_diff);
+  						
+  						if ($r_diff < 50 || $g_diff < 50 || $b_diff < 50)
+  						{
+  							//dump($r_diff);
+  							$unique = false;
+  						}
+  					}
+  					
+  					if ($unique)
+  					{
+  						$top_colors[] = $r . "," . $g . "," . $b;
+  						//break;
+  					}
+  				}
+  			}
+  			
+  			$img = "upload/" . $_FILES["file"]["name"];
+  			//dump($top_colors);
+  			render("palette.php", ["colors" => $top_colors, "img" => $img]);
     	}
   	}
 	else
