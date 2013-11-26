@@ -125,7 +125,7 @@
   						$b_diff = abs($b - $rgb_t[2]);  
   						//dump($b_diff);
   						
-  						if ($r_diff < 50 || $g_diff < 50 || $b_diff < 50)
+  						if ($r_diff < 70 && $g_diff < 70 && $b_diff < 70)
   						{
   							//dump($r_diff);
   							$unique = false;
