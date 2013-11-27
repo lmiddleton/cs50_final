@@ -38,111 +38,111 @@
       			echo "Stored in: " . "upload/" . $_FILES["file"]["name"];
       		}
       		
+      		// store path to file
+      		$img_path = "upload/" . $_FILES["file"]["name"];
+      		
       		// store image dimensions
-  			$size = getimagesize("upload/" . $_FILES["file"]["name"]);
+  			$size = getimagesize($img_path);
   			$width = $size[0];
   			$height = $size[1];
   			
   			// add if statements so correct function is used depending on file type
-  			$im = imagecreatefromjpeg("upload/" . $_FILES["file"]["name"]);
+  			$img = imagecreatefromjpeg($img_path);
   			
-  			$colors = array();
+  			// set up color storage arrays - maybe use only one array somehow?
   			$color_counts = array();
-  			$top_colors = array();
-  			$pixel_count = 0;
-  			$repeats = 0;
+  			$palette = array();
   			
-  			// loop through pixels
+  			// loop through each col of pixels
   			for ($i = 0; $i < $width; $i++)
   			{
+  				// loop through each row of pixels
   				for ($j = 0; $j < $height; $j++)
   				{
-  					$rgb = imagecolorat($im, $i, $j);
-  					$icfi = imagecolorsforindex($im, $rgb);
+  					// store rgb vals of pixel
+  					$rgb = imagecolorat($img, $i, $j);
+  					$icfi = imagecolorsforindex($img, $rgb);
   					$r = $icfi["red"];
   					$g = $icfi["green"];
   					$b = $icfi["blue"];
-  					$pixel_count++;
+  					$rgb_key = $r . "," . $g . "," . $b;
   					
-  					// add color to array using its rgb string as a key to avoid duplicates
-  					$colors[$r . $g . $b] = $icfi;
-  							
-  					// count occurance of each color
-  					if (empty($color_counts[$r . "," . $g . "," . $b]))
+  					// store occurances of pixel color
+  					if (empty($color_counts[$rgb_key]))
   					{
-  						$color_counts[$r . "," . $g . "," . $b] = 1;
+  						$color_counts[$rgb_key] = 1;
   					}
+  					// don't even need this unless decide want actual counts
   					else
   					{
-  						$color_counts[$r . "," . $g . "," . $b] = $color_counts[$r . "," . $g . "," . $b] + 1;
+  						$color_counts[$rgb_key] = $color_counts[$rgb_key] + 1;
   					}
-  							
   				}
   			}
   			
-  			// this works
   			/*
-  			foreach ($color_counts as $key => $value)
+  			$place = 0;
+  			$cc_length = count($color_counts);
+  			// for each color in array
+  			for ($k = 0; $k < $cc_length; $k++)
   			{
-  				$val = $value;
-  				if ($val > 50)
+  				// after first color
+  				if ($place > 0)
   				{
-  					//dump($val);
-  					$top_colors[] = $key;
+  					// compare to previous kept colors
+  					
   				}
-  				//dump($val);
   			}
   			*/
   			
-  			//dump($color_counts);
-  			
-  			$test_count = 0;
-  			
+  			// loop through each stored color
   			foreach ($color_counts as $key => $value)
   			{
-  				$test_count++;
-  				if (empty($top_colors))
+  				// add first color to palette array
+  				if (empty($palette))
   				{
-  					$top_colors[] = $key;
+  					$palette[] = $key;
   				}
   				else
   				{
+  					// expand color's rgb vals
   					$rgb = explode(",", $key);
   					$r = $rgb[0];
   					$g = $rgb[1];
   					$b = $rgb[2];
+  					$rgb_key = $r . "," . $g . "," . $b;
   					
+  					// start by assuming color is unique
   					$unique = true;
   					
-  					foreach ($top_colors as $key2 => $value2)
+  					// loop through colors already in palette to compare new color
+  					foreach ($palette as $key2 => $value2)
   					{
-  						//dump($value2);
+  						// calculate difference between new color and palette color
   						$rgb_t = explode(",", $value2);
-  						//dump($rgb_t);
   						$r_diff = abs($r - $rgb_t[0]);
-  						//dump($r_diff);
   						$g_diff = abs($g - $rgb_t[1]);
   						$b_diff = abs($b - $rgb_t[2]);  
-  						//dump($b_diff);
   						
+  						// determine if new color is too similar to palette color
+  						// factor out magic number
   						if ($r_diff < 70 && $g_diff < 70 && $b_diff < 70)
   						{
-  							//dump($r_diff);
+  							// new color is too similar
   							$unique = false;
   						}
   					}
   					
+  					// if new color is unique enough, add to palette
   					if ($unique)
   					{
-  						$top_colors[] = $r . "," . $g . "," . $b;
-  						//break;
+  						$palette[] = $rgb_key;
   					}
   				}
   			}
   			
-  			$img = "upload/" . $_FILES["file"]["name"];
-  			//dump($top_colors);
-  			render("palette.php", ["colors" => $top_colors, "img" => $img]);
+  			// display the palette
+  			render("palette.php", ["colors" => $palette, "img_path" => $img_path]);
     	}
   	}
 	else

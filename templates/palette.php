@@ -14,7 +14,7 @@
 
 
 <?php foreach ($colors as $color): ?>
-	<div style="width: 30px; height: 30px; background-color: rgb(<?= $color ?>); display: inline-block;"></div>
+	<div style="width: 10px; height: 10px; background-color: rgb(<?= $color ?>); display: inline-block;"></div>
 <? endforeach ?>
 
-<img src="<?= $img ?>" />
+<img src="<?= $img_path ?>" />
