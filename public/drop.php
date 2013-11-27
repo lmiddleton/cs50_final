@@ -2,6 +2,8 @@
 
 	// configuration
     require("../includes/config.php");
+    
+    set_time_limit(100);
 	
 	// modified from http://www.w3schools.com/php/php_file_upload.asp
 	$allowedExts = array("gif", "jpeg", "jpg", "png");
@@ -53,48 +55,9 @@
   			$color_counts = array();
   			$palette = array();
   			
-  			// loop through each col of pixels
-  			for ($i = 0; $i < $width; $i++)
-  			{
-  				// loop through each row of pixels
-  				for ($j = 0; $j < $height; $j++)
-  				{
-  					// store rgb vals of pixel
-  					$rgb = imagecolorat($img, $i, $j);
-  					$icfi = imagecolorsforindex($img, $rgb);
-  					$r = $icfi["red"];
-  					$g = $icfi["green"];
-  					$b = $icfi["blue"];
-  					$rgb_key = $r . "," . $g . "," . $b;
-  					
-  					// store occurances of pixel color
-  					if (empty($color_counts[$rgb_key]))
-  					{
-  						$color_counts[$rgb_key] = 1;
-  					}
-  					// don't even need this unless decide want actual counts
-  					else
-  					{
-  						$color_counts[$rgb_key] = $color_counts[$rgb_key] + 1;
-  					}
-  				}
-  			}
+  			get_palette($img, $width, $height, $color_counts, $palette);
   			
   			/*
-  			$place = 0;
-  			$cc_length = count($color_counts);
-  			// for each color in array
-  			for ($k = 0; $k < $cc_length; $k++)
-  			{
-  				// after first color
-  				if ($place > 0)
-  				{
-  					// compare to previous kept colors
-  					
-  				}
-  			}
-  			*/
-  			
   			// loop through each stored color
   			foreach ($color_counts as $key => $value)
   			{
@@ -140,6 +103,7 @@
   					}
   				}
   			}
+  			*/
   			
   			// display the palette
   			render("palette.php", ["colors" => $palette, "img_path" => $img_path]);
