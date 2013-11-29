@@ -13,6 +13,27 @@ $(document).ready(function(){
 		}
 	};
 	
+	$('#split-comp').on('click', function() {
+		//console.log('split');
+		var r = $('#r').val();
+		var g = $('#g').val();
+		var b = $('#b').val();
+		
+		var splitComps = splitComp(r, g, b);
+		console.log(splitComps);
+		
+		var r0 = splitComps[0].r;
+		var g0 = splitComps[0].g;
+		var b0 = splitComps[0].b;
+		
+		var r1 = splitComps[1].r;
+		var g1 = splitComps[1].g;
+		var b1 = splitComps[1].b;	
+		
+		$('#split-swatch0').css('background-color', 'rgb(' + r0 + ',' + g0 + ',' + b0 + ')');
+		$('#split-swatch1').css('background-color', 'rgb(' + r1 + ',' + g1 + ',' + b1 + ')');
+	});
+	
 });
 
 var hexLetterKey = [
@@ -140,8 +161,11 @@ function initHandleSubmit()
 /*formula derived from http://www.pixel2life.com/publish/tutorials/164/using_php_to_convert_between_hex_and_rgb_values/*/
 function hexToRgb(hex)
 {
+	var hex = hex.toUpperCase();
+	
 	// split into pairs and convert each
 	var r = hexToDec(hex.slice(0,1)) * 16 + parseInt(hexToDec(hex.slice(1,2)));
+	console.log(hexToDec(hex.slice(0,1)));
 	$('#r').val(r);
 	var g = hexToDec(hex.slice(2,3)) * 16 + parseInt(hexToDec(hex.slice(3,4)));
 	$('#g').val(g);
@@ -160,7 +184,8 @@ function rgbToHex(r, g, b)
 	
 	var hex = reds + greens + blues;
 	
-	$('#hex').val(hex); 
+	$('#hex').val(hex);
+	//console.log(hex);
 }
 
 /*converts rgb values to cmyk values*/
@@ -264,8 +289,176 @@ function hexToDec(character)
 	}
 }
 
-/* returns the HSV values*/
-/*formula from http://www.cs.rit.edu/~ncs/color/t_convert.html*/
-function rgbToHsv()
+/* returns the HSV values for the given RGB values
+ * h = [0, 360], s = [0, 1], v = [0,1]
+ * if s == 0, then h = -1 (undefined)
+ * formula derived from http://www.cs.rit.edu/~ncs/color/t_convert.html
+ * and http://www.rapidtables.com/convert/color/rgb-to-hsv.htm */
+function rgbToHsv(r, g, b)
 {
+	// change rgb range from 0 to 1
+	var r = r/255;
+	var g = g/255;
+	var b = b/255;
+	
+	var min = Math.min(r, g, b);
+	var max = Math.max(r, g, b);
+	
+	var hsv = new Object();
+	
+	hsv.v = max;
+	
+	var delta = max - min;
+	
+	if (max != 0) {
+		hsv.s = delta / max;
+	}
+	else {
+		// r = g = b = 0 (s = 0, v is undefined)
+		hsv.s = 0;
+		hsv.h = -1;
+		return hsv;
+	}
+	
+	if (hsv.r == max) {
+		// between yellow and magenta
+		hsv.h = (g - b) / delta;
+	}
+	else if (g == max) {
+		// between cyan and yellow
+		hsv.h = 2 + (b - r) / delta;
+	}
+	else {
+		// between magenta and cyan
+		hsv.h = 4 + (r - g) / delta;
+	}
+	
+	// degrees
+	hsv.h = hsv.h * 60;
+	if (hsv.h < 0) {
+		hsv.h = hsv.h + 360;
+	}
+	
+	return hsv;
+}
+
+/* formula derived from http://www.cs.rit.edu/~ncs/color/t_convert.html*/
+function hsvToRgb (hsv)
+{
+	// unpack
+	var h = hsv.h;
+	var s = hsv.s;
+	var v = hsv.v;
+	
+	var rgb = new Object();
+	var i, f, p, q, t;
+	
+	if (s == 0) {
+		// achromatic (grey)
+		rgb.r = v;
+		rgb.g = v;
+		rgb.b = v;
+		return rgb;
+	}
+	
+	// sector 0 to 5
+	h = h / 60;
+	i = Math.floor(h);
+	// factorial part of h
+	f = h - i;
+	p = v * (1 - s);
+	q = v * (1 - s * f);
+	t = v * (1 - s * (1 - f));
+	
+	switch (i)
+	{
+		case 0:
+			rgb.r = v;
+			rgb.g = t;
+			rgb.b = p;
+			break;
+			
+		case 1:
+			rgb.r = q;
+			rgb.g = v;
+			rgb.b = p;
+			break;
+			
+		case 2:
+			rgb.r = p;
+			rgb.g = v;
+			rgb.b = t;
+			break;
+			
+		case 3:
+			rgb.r = p;
+			rgb.g = q;
+			rgb.b = v;
+			break;
+			
+		case 4:
+			rgb.r = t;
+			rgb.g = p;
+			rgb.b = v;
+			break;
+			
+		default:
+			rgb.r = v;
+			rgb.g = p;
+			rgb.b = q;
+			break;
+	}
+	
+	rgb.r = Math.round(rgb.r * 255);
+	rgb.g = Math.round(rgb.g * 255);
+	rgb.b = Math.round(rgb.b * 255);
+	
+	return rgb;
+}
+
+/* returns the split complements of a color given its RGB
+ * formula derived from http://stackoverflow.com/questions/9577590/formula-to-find-the-split-complementaries-of-a-color */
+function splitComp(r, g, b)
+{
+	console.log('entered');
+	// convert to hsv
+	var hsv = rgbToHsv(r, g, b);
+	
+	// complement
+	// NEED THIS TO WRAP AROUND SO NEVER MORE THAN 360
+	var h = hsv.h + 180;
+	var s = hsv.s;
+	var v = hsv.v;
+	// split complements
+	var h0 = (h + 30) % 360;
+	console.log(h0);
+	var h1 = (h - 30) % 360;
+	console.log(h1);
+	
+	var hsv0 = {
+		h: h0,
+		s: s,
+		v: v
+	};
+	
+	var hsv1 = {
+		h: h1,
+		s: s,
+		v: v
+	};
+	
+	console.log(hsv0);
+	console.log(hsv1);
+	
+	// convert back to rgb
+	var rgb0 = hsvToRgb(hsv0);
+	//console.log(rgb0);
+	var rgb1 = hsvToRgb(hsv1);
+	//console.log(rgb1);
+	
+	var splitComps = new Array();
+	splitComps[0] = rgb0;
+	splitComps[1] = rgb1;
+	
+	return splitComps;
 }

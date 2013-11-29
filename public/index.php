@@ -62,12 +62,16 @@
 		</div>
 	</form>
 	
+	<input id="split-comp" type="submit" value="Split Complement" />
+	
 	<form enctype="multipart/form-data" action="drop.php" method="POST">
 		<input type="file" name="file" />
 		<input type="submit" />
 	</form>
 	
-	<div id="swatch" style="width: 100px; height: 100px;"></div>
+	<div id="swatch" style="width: 100px; height: 100px; display: inline-block;"></div>
+	<div id="split-swatch0" style="width: 100px; height: 100px; display: inline-block;"></div>
+	<div id="split-swatch1" style="width: 100px; height: 100px; display: inline-block;"></div>
 	
 	<form enctype="multipart/form-data" action="drop.php" class="dropzone" id="drop" style="width: 400px; height: 400px;"></form>
 	
