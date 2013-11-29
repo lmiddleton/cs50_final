@@ -1,10 +1,8 @@
 $(document).ready(function(){
 	//initHandleKeypress();
-	initHandleSubmit();
+	handleConvert();
 	
-	// configure dropzone
-	//var dropzone = new Dropzone("#drop");
-	//$("#drop").addClass("dropzone");
+	// set dropzone options
 	Dropzone.options.drop = {
 		init: function() {
 			this.on("success", function(file, response) {
@@ -13,14 +11,18 @@ $(document).ready(function(){
 		}
 	};
 	
+	// handle split complement button
 	$('#split-comp').on('click', function() {
-		//console.log('split');
+		
+		// grab rgb values
 		var r = $('#r').val();
 		var g = $('#g').val();
 		var b = $('#b').val();
 		
+		// calculate split complementries
 		var splitComps = splitComp(r, g, b);
 		
+		// if false, returned, display same color
 		if (!splitComps) {
 			r0 = r1 = r;
 			g0 = g1 = g;
@@ -49,6 +51,7 @@ $(document).ready(function(){
 		
 });
 
+// global that stores hex letter values
 var hexLetterKey = [
 	{'letter': 'A', 'number': 10},
 	{'letter': 'B', 'number': 11},
@@ -69,8 +72,8 @@ function initHandleKeypress()
 }
 */
 
-/*handles form submit*/
-function initHandleSubmit()
+/*handles convert form submit*/
+function handleConvert()
 {
 	$('#convert-form').submit(function(event) {
 		// prevent page reload
@@ -99,7 +102,12 @@ function initHandleSubmit()
 			else
 			{
 				// convert
-				hexToRgb(hex);
+				var rgb = hexToRgb(hex);
+				
+				$('#r').val(rgb.r);
+				$('#g').val(rgb.g);
+				$('#b').val(rgb.b);
+				
 				$('#swatch').css('background-color', '#' + hex);
 			}
 		}
@@ -171,24 +179,32 @@ function initHandleSubmit()
 	});
 }
 
-/*converts a 6 digit hex value to rgb values*/
-/*formula derived from http://www.pixel2life.com/publish/tutorials/164/using_php_to_convert_between_hex_and_rgb_values/*/
+/* returns object with RGB values for the given 6 digit hex value
+ * formula derived from http://www.pixel2life.com/publish/tutorials/164/using_php_to_convert_between_hex_and_rgb_values/
+ */
 function hexToRgb(hex)
 {
+	// format with uppercase letters
 	var hex = hex.toUpperCase();
 	
 	// split into pairs and convert each
 	var r = hexToDec(hex.slice(0,1)) * 16 + parseInt(hexToDec(hex.slice(1,2)));
 	console.log(hexToDec(hex.slice(0,1)));
-	$('#r').val(r);
 	var g = hexToDec(hex.slice(2,3)) * 16 + parseInt(hexToDec(hex.slice(3,4)));
-	$('#g').val(g);
 	var b = hexToDec(hex.slice(4,5)) * 16 + parseInt(hexToDec(hex.slice(5,6)));
-	$('#b').val(b);
+	
+	// build RGB object
+	var rgb = new Object();
+	rgb.r = r;
+	rgb.g = g;
+	rgb.b = b;
+	
+	return rgb;
 }
 
-/*converts rgb values to 6 digit hex*/
-/*formula derived from http://gristle.tripod.com/hexconv.html*/
+/* returns 6 digit hex value for the given RGB values
+ * formula derived from http://gristle.tripod.com/hexconv.html
+ */
 function rgbToHex(r, g, b)
 {
 	// calculate pairs
@@ -196,10 +212,10 @@ function rgbToHex(r, g, b)
 	var greens = decToHex(Math.floor(g / 16)) + (decToHex(g % 16)).toString();
 	var blues = decToHex(Math.floor(b / 16)) + (decToHex(b % 16)).toString();
 	
+	// build hex
 	var hex = reds + greens + blues;
 	
 	return hex;
-	//console.log(hex);
 }
 
 /*converts rgb values to cmyk values*/
@@ -264,13 +280,15 @@ function rgbToCmyk(r, g, b)
 	
 }
 
-/*returns the hex character for a decimal value*/
+/* returns the hex character for a decimal value */
 function decToHex(value)
 {
+	// leave single digit values
 	if (value <= 9)
 	{
 		return value;
 	}
+	// double digit values are 
 	else
 	{
 		for (var i = 0; i < hexLetterKey.length; i++)
