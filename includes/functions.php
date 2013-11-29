@@ -222,6 +222,7 @@
     /***************/
     function get_palette($img, $width, $height, &$color_counts, &$palette)
     {
+    	
     	// loop through each col of pixels
   			for ($i = 0; $i < $width; $i++)
   			{
@@ -249,6 +250,7 @@
   						$unique = true;
   					
   						// loop through colors already in palette to compare new color
+  						
   						foreach ($palette as $key2 => $value2)
   						{
   							// calculate difference between new color and palette color
@@ -263,6 +265,7 @@
   							{
   								// new color is too similar
   								$unique = false;
+  								break;
   							}
   						}
   					

@@ -3,16 +3,16 @@ $(document).ready(function(){
 	initHandleSubmit();
 	
 	// configure dropzone
-	/*
-	$("div#drop").dropzone({
-		url: "/file/post",
+	//var dropzone = new Dropzone("#drop");
+	//$("#drop").addClass("dropzone");
+	Dropzone.options.drop = {
 		init: function() {
-			this.on("addedfile", function(file) {
-				console.log('YEAH');
+			this.on("success", function(file, response) {
+				console.log(response);
 			});
 		}
-	});
-	*/
+	};
+	
 });
 
 var hexLetterKey = [
@@ -262,4 +262,10 @@ function hexToDec(character)
 			}
 		}
 	}
+}
+
+/* returns the HSV values*/
+/*formula from http://www.cs.rit.edu/~ncs/color/t_convert.html*/
+function rgbToHsv()
+{
 }

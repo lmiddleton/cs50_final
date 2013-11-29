@@ -5,8 +5,10 @@
 <head>
 	<title>Color Convert</title>
 	
+	<link rel="stylesheet" href="js/dropzone/dropzone-3.7.3/downloads/css/dropzone.css" />
+	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script type="text/javascript" src="js/dropzone/dropzone.js"></script>
+	<script type="text/javascript" src="js/dropzone/dropzone-3.7.3/downloads/dropzone.min.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
 </head>
 
@@ -67,7 +69,7 @@
 	
 	<div id="swatch" style="width: 100px; height: 100px;"></div>
 	
-	<form enctype="multipart/form-data" action="drop.php" class="dropzone" id="my-awesome-dropzone" style="width: 400px; height: 400px; background-color: pink;"></form>
+	<form enctype="multipart/form-data" action="drop.php" class="dropzone" id="drop" style="width: 400px; height: 400px;"></form>
 	
 </body>
 
