@@ -20,20 +20,33 @@ $(document).ready(function(){
 		var b = $('#b').val();
 		
 		var splitComps = splitComp(r, g, b);
-		console.log(splitComps);
 		
-		var r0 = splitComps[0].r;
-		var g0 = splitComps[0].g;
-		var b0 = splitComps[0].b;
+		if (!splitComps) {
+			r0 = r1 = r;
+			g0 = g1 = g;
+			b0 = b1 = b;
+		}
 		
-		var r1 = splitComps[1].r;
-		var g1 = splitComps[1].g;
-		var b1 = splitComps[1].b;	
+		else {
+			var r0 = splitComps[0].r;
+			var g0 = splitComps[0].g;
+			var b0 = splitComps[0].b;
+		
+			var r1 = splitComps[1].r;
+			var g1 = splitComps[1].g;
+			var b1 = splitComps[1].b;
+		}
+		
+		// determine hex
+		console.log(r0 + ',' + g0 + ',' + b0);
+		var hex0 = rgbToHex(r0, g0, b0);
+		var hex1 = rgbToHex(r1, g1, b1);
+		console.log(hex0 + ',' + hex1);
 		
 		$('#split-swatch0').css('background-color', 'rgb(' + r0 + ',' + g0 + ',' + b0 + ')');
 		$('#split-swatch1').css('background-color', 'rgb(' + r1 + ',' + g1 + ',' + b1 + ')');
 	});
-	
+		
 });
 
 var hexLetterKey = [
@@ -114,7 +127,8 @@ function initHandleSubmit()
 			else
 			{
 				// convert
-				rgbToHex(r, g, b);
+				var hex = rgbToHex(r, g, b);
+				$('#hex').val(hex);
 				rgbToCmyk(r, g, b);
 				$('#swatch').css('background-color', 'rgb(' + r + ',' + g + ',' + b + ')');
 			}
@@ -184,7 +198,7 @@ function rgbToHex(r, g, b)
 	
 	var hex = reds + greens + blues;
 	
-	$('#hex').val(hex);
+	return hex;
 	//console.log(hex);
 }
 
@@ -416,24 +430,29 @@ function hsvToRgb (hsv)
 	return rgb;
 }
 
-/* returns the split complements of a color given its RGB
+/* returns object containing split complements of a color given its RGB or false if s = 0
  * formula derived from http://stackoverflow.com/questions/9577590/formula-to-find-the-split-complementaries-of-a-color */
 function splitComp(r, g, b)
 {
-	console.log('entered');
 	// convert to hsv
 	var hsv = rgbToHsv(r, g, b);
+	console.log(hsv);
 	
 	// complement
 	// NEED THIS TO WRAP AROUND SO NEVER MORE THAN 360
+	if (hsv.s == 0)
+	{
+		return false;
+	}
 	var h = hsv.h + 180;
+	console.log('h: ' + h);
 	var s = hsv.s;
 	var v = hsv.v;
 	// split complements
 	var h0 = (h + 30) % 360;
-	console.log(h0);
+	console.log('h0: ' + h0);
 	var h1 = (h - 30) % 360;
-	console.log(h1);
+	console.log('h1: ' + h1);
 	
 	var hsv0 = {
 		h: h0,
