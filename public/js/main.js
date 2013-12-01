@@ -6,7 +6,16 @@ $(document).ready(function(){
 	Dropzone.options.drop = {
 		init: function() {
 			this.on("success", function(file, response) {
-				console.log(response);
+				// parse the response
+				var object = $.parseJSON(response);
+				
+				// print the color palette
+				$('#middle').append('<div style="clear: left; margin-bottom: 7px;">');
+				for (var i = 0, n = object.length; i < n; i++)
+				{
+					$('#middle').append('<div style="float: left; width: 30px; height: 20px; background-color: rgb(' + object[i] + ')"></div>');
+				}
+				$('#right').append('</div>');
 			});
 		}
 	};
