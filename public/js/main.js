@@ -4,8 +4,10 @@ $(document).ready(function(){
 	
 	// set dropzone options
 	Dropzone.options.drop = {
+		acceptedFiles: '.jpeg, .jpg, .gif, .png',
 		init: function() {
 			this.on("success", function(file, response) {
+				console.log(response);
 				// parse the response
 				var object = $.parseJSON(response);
 				
@@ -17,7 +19,8 @@ $(document).ready(function(){
 				}
 				$('#right').append('</div>');
 			});
-		}
+		},
+		maxFilesize: 5 // MB
 	};
 	
 	// handle split complement button

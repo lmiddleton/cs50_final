@@ -33,16 +33,15 @@
 	
 	<div class="col-md-9">
 	
-		<div class="col-md-8">
-			<h2>Upload a file...</h2>
+		<div class="col-md-7">
+			<h2>Upload an image...</h2>
 			<form enctype="multipart/form-data" action="drop.php" class="dropzone" id="drop" style=""></form>
 		</div>
 	
-		<div id="middle" class="col-md-4">
+		<div id="middle" class="col-md-5">
+			<h2>...to see its palette...</h2>
+			
 		
-			<div id="swatch" style="width: 100px; height: 100px; display: inline-block;"></div>
-		<div id="split-swatch0" style="width: 100px; height: 100px; display: inline-block;"></div>
-		<div id="split-swatch1" style="width: 100px; height: 100px; display: inline-block;"></div>
 	
 			
 	
@@ -52,6 +51,8 @@
 	
 	<div class="col-md-3">
 		<h2>...or enter a color.</h2>
+		
+		<div id="swatch" style="width: 40px; height: 30px; display: inline-block;"></div>
 		
 		<form id="convert-form">
 				<div>
@@ -109,6 +110,10 @@
 			</form>
 	
 			<input id="split-comp" type="submit" value="Split Complement" />
+			<div>
+			<div id="split-swatch0" style="width: 40px; height: 30px; display: inline-block;"></div>
+		<div id="split-swatch1" style="width: 40px; height: 30px; display: inline-block;"></div>
+		</div>
 	
 			<!--
 			<form enctype="multipart/form-data" action="drop.php" method="POST">
