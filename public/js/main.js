@@ -15,13 +15,32 @@ $(document).ready(function(){
 				$('#middle').append('<div style="clear: left; margin-bottom: 7px;">');
 				for (var i = 0, n = object.length; i < n; i++)
 				{
-					$('#middle').append('<div style="float: left; width: 30px; height: 20px; background-color: rgb(' + object[i] + ')"></div>');
+					$('#middle').append('<div class="upload-swatch" style="float: left; width: 30px; height: 20px; background-color: rgb(' + object[i] + ')"></div>');
 				}
 				$('#right').append('</div>');
 			});
 		},
 		maxFilesize: 5 // MB
 	};
+	
+	// handle click on swatches from upload
+	$(document).on('click', '.upload-swatch', function() {
+		// grab color in 'rgb(?,?,?)' format
+		var rgb = $(this).css('background-color');
+		
+		
+		// trim extra characters
+		rgb = rgb.substring(4, rgb.length - 1);
+		
+		// split rgb
+		rgb = rgb.split(",");
+		console.log(rgb);
+		
+		// load into inputs
+		$('#r').val(rgb[0].trim());
+		$('#g').val(rgb[1].trim());
+		$('#b').val(rgb[2].trim());
+	});
 	
 	// handle split complement button
 	$('#split-comp').on('click', function() {
