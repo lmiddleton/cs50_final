@@ -36,10 +36,21 @@ $(document).ready(function(){
 		rgb = rgb.split(",");
 		console.log(rgb);
 		
+		var r = rgb[0].trim();
+		var g = rgb[1].trim();
+		var b = rgb[2].trim();
+		
 		// load into inputs
-		$('#r').val(rgb[0].trim());
-		$('#g').val(rgb[1].trim());
-		$('#b').val(rgb[2].trim());
+		$('#r').val(r);
+		$('#g').val(g);
+		$('#b').val(b);
+		
+		// update hex
+		var hex = rgbToHex(r, g, b);
+		$('#hex').val(hex);
+		
+		// show swatch
+		$('#swatch').css('background-color', '#' + hex);
 	});
 	
 	// handle split complement button
@@ -71,10 +82,8 @@ $(document).ready(function(){
 		}
 		
 		// determine hex
-		console.log(r0 + ',' + g0 + ',' + b0);
 		var hex0 = rgbToHex(r0, g0, b0);
 		var hex1 = rgbToHex(r1, g1, b1);
-		console.log(hex0 + ',' + hex1);
 		
 		$('#split-swatch0').css('background-color', 'rgb(' + r0 + ',' + g0 + ',' + b0 + ')');
 		$('#split-swatch1').css('background-color', 'rgb(' + r1 + ',' + g1 + ',' + b1 + ')');
@@ -493,10 +502,12 @@ function splitComp(r, g, b)
 	{
 		return false;
 	}
-	var h = hsv.h + 180;
+	var h = (hsv.h + 180) % 360; // gets the complement
 	console.log('h: ' + h);
 	var s = hsv.s;
+	console.log('s: ' + s);
 	var v = hsv.v;
+	console.log('v: ' + v);
 	// split complements
 	var h0 = (h + 30) % 360;
 	console.log('h0: ' + h0);
@@ -520,8 +531,10 @@ function splitComp(r, g, b)
 	
 	// convert back to rgb
 	var rgb0 = hsvToRgb(hsv0);
+	console.log(rgb0);
 	//console.log(rgb0);
 	var rgb1 = hsvToRgb(hsv1);
+	console.log(rgb1);
 	//console.log(rgb1);
 	
 	var splitComps = new Array();

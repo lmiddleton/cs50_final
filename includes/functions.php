@@ -220,11 +220,9 @@
     }
     
     /***************/
-    function get_palette($img, $width, $height, &$color_counts, &$palette)
+    function get_palette($img, $width, $height, &$palette)
     {
-    	
-    	//dump($width);
-    		
+    	    		
     	// loop through each col of pixels
   			for ($i = 0; $i < $width; $i++)
   			{
@@ -292,7 +290,6 @@
   					}
   				}
   			}
-  			//dump($palette);
     }
 
 ?>

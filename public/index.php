@@ -52,7 +52,7 @@
 	<div class="col-md-3">
 		<h2>...or enter a color.</h2>
 		
-		<div id="swatch" style="width: 40px; height: 30px; display: inline-block;"></div>
+		
 		
 		<form id="convert-form">
 				<div>
@@ -108,6 +108,8 @@
 				</div>
 			
 			</form>
+			
+			<div id="swatch" style="height: 80px; margin-bottom: 10px; margin-top: 10px;"></div>
 	
 			<input id="split-comp" type="submit" value="Split Complement" />
 			<div>
