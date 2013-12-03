@@ -9,7 +9,6 @@
 	$allowedExts = array("gif", "jpeg", "jpg", "png");
 	$temp = explode(".", $_FILES["file"]["name"]);
 	$extension = end($temp);
-	//dump($extension);
 	if ((($_FILES["file"]["type"] == "image/gif")
 		|| ($_FILES["file"]["type"] == "image/jpeg")
 		|| ($_FILES["file"]["type"] == "image/jpg")
@@ -65,27 +64,86 @@
    				$height = round($width / $ratio_orig);
 			}
 			
+			
+			
 			// resample
 			$image_p = imagecreatetruecolor($width, $height);
-			
 			$image = imagecreatefromjpeg($img_path);
 			imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
 			
 			// output
 			imagejpeg($image_p, "resized/" . $_FILES["file"]["name"], 100);
+      		
+      		// store image dimensions
+  			//$size = getimagesize($img_path);
+  			//$width = $size[0];
+  			//$height = $size[1];
+  			
   			
   			// add if statements so correct function is used depending on file type
   			// new image
   			$img = imagecreatefromjpeg("resized/" . $_FILES["file"]["name"]);
+  			// new width and height
+  			
   			
   			// set up color storage arrays - maybe use only one array somehow?
+  			$color_counts = array();
   			$palette = array();
   			
   			//dump($width);
   			
   			get_palette($img, $width, $height, $color_counts, $palette);
   			
-  			// return the palette
+  			/*
+  			// loop through each stored color
+  			foreach ($color_counts as $key => $value)
+  			{
+  				// add first color to palette array
+  				if (empty($palette))
+  				{
+  					$palette[] = $key;
+  				}
+  				else
+  				{
+  					// expand color's rgb vals
+  					$rgb = explode(",", $key);
+  					$r = $rgb[0];
+  					$g = $rgb[1];
+  					$b = $rgb[2];
+  					$rgb_key = $r . "," . $g . "," . $b;
+  					
+  					// start by assuming color is unique
+  					$unique = true;
+  					
+  					// loop through colors already in palette to compare new color
+  					foreach ($palette as $key2 => $value2)
+  					{
+  						// calculate difference between new color and palette color
+  						$rgb_t = explode(",", $value2);
+  						$r_diff = abs($r - $rgb_t[0]);
+  						$g_diff = abs($g - $rgb_t[1]);
+  						$b_diff = abs($b - $rgb_t[2]);  
+  						
+  						// determine if new color is too similar to palette color
+  						// factor out magic number
+  						if ($r_diff < 70 && $g_diff < 70 && $b_diff < 70)
+  						{
+  							// new color is too similar
+  							$unique = false;
+  						}
+  					}
+  					
+  					// if new color is unique enough, add to palette
+  					if ($unique)
+  					{
+  						$palette[] = $rgb_key;
+  					}
+  				}
+  			}
+  			*/
+  			
+  			// display the palette
+  			//render("palette.php", ["colors" => $palette, "img_path" => $img_path]);
   			$json = json_encode($palette);
   			echo $json;
     	}
