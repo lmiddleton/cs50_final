@@ -23,7 +23,9 @@ $(document).ready(function(){
 	};
 	
 	// handle click on palette swatches
-	$(document).on('click', '.palette-swatch', function() {
+	$(document).on('click', '.palette-swatch', function(event) {
+		event.stopImmediatePropagation();
+	
 		// grab color (rgb(?,?,?)' format)
 		var rgb = $(this).css('background-color');
 		
@@ -38,7 +40,7 @@ $(document).ready(function(){
 		
 		// load into rgb inputs
 		updateRgbInputs(r, g, b);
-		
+				
 		// convert to hex
 		var hex = rgbToHex(r, g, b);
 		
@@ -89,7 +91,6 @@ function initHandleKeypress()
 		var r = rgb.r;
 		var g = rgb.g;
 		var b = rgb.b;
-		console.log(r + ',' + g + ',' + b);
 		
 		// update rgb inputs
 		updateRgbInputs(r, g, b);
@@ -115,7 +116,6 @@ function initHandleKeypress()
 		
 		// convert to hex
 		var hex = rgbToHex(r, g, b);
-		console.log(hex);
 		
 		// update hex
 		updateHexInput(hex);
@@ -256,7 +256,6 @@ function hexToRgb(hex)
 	
 	// split into pairs and convert each
 	var r = hexToDec(hex.slice(0,1)) * 16 + parseInt(hexToDec(hex.slice(1,2)));
-	console.log(hexToDec(hex.slice(0,1)));
 	var g = hexToDec(hex.slice(2,3)) * 16 + parseInt(hexToDec(hex.slice(3,4)));
 	var b = hexToDec(hex.slice(4,5)) * 16 + parseInt(hexToDec(hex.slice(5,6)));
 	
@@ -527,7 +526,7 @@ function getComplementHsv(r, g, b)
 	{
 		return false;
 	}
-	var h = hsv.h + 180;
+	var h = (hsv.h + 180) % 360;
 	var s = hsv.s;
 	var v = hsv.v;
 	
@@ -543,6 +542,9 @@ function getComplementHsv(r, g, b)
 function complement(r, g, b)
 {
 	var hsv = getComplementHsv(r, g, b);
+	if (!hsv) {
+		return false;
+	}
 	
 	// convert back to rgb
 	var rgb = hsvToRgb(hsv);
@@ -555,6 +557,9 @@ function complement(r, g, b)
 function splitComp(r, g, b)
 {
 	var hsv = getComplementHsv(r, g, b);
+	if (!hsv) {
+		return false;
+	}
 	
 	var h = hsv.h;
 	var s = hsv.s;
