@@ -32,6 +32,10 @@ h1 {
 	float: left;
 }
 
+.comp-swatch {
+	height: 40px;
+}
+
 .rgb {
 	display: inline-block;
 }

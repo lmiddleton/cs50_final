@@ -48,6 +48,9 @@ $(document).ready(function(){
 		// update main swatch
 		updateMainSwatch(hex);
 		
+		// update comp
+		updateComp(r, g, b);
+		
 		// update split comps
 		updateSplitComps(r, g, b);
 	});
@@ -94,6 +97,9 @@ function initHandleKeypress()
 		// update main swatch
 		updateMainSwatch(hex);
 		
+		// update comp
+		updateComp(r, g, b);
+		
 		// update split comps
 		updateSplitComps(r, g, b);
 		
@@ -114,8 +120,11 @@ function initHandleKeypress()
 		// update hex
 		updateHexInput(hex);
 		
-		// update swatch
+		// update main swatch
 		updateMainSwatch(hex);
+		
+		// update comp
+		updateComp(r, g, b);
 		
 		// update split comps
 		updateSplitComps(r, g, b);
@@ -508,9 +517,7 @@ function hsvToRgb (hsv)
 	return rgb;
 }
 
-/* returns object containing split complements of a color given its RGB or false if s = 0
- * formula derived from http://stackoverflow.com/questions/9577590/formula-to-find-the-split-complementaries-of-a-color */
-function splitComp(r, g, b)
+function getComplementHsv(r, g, b)
 {
 	// convert to hsv
 	var hsv = rgbToHsv(r, g, b);
@@ -523,6 +530,36 @@ function splitComp(r, g, b)
 	var h = hsv.h + 180;
 	var s = hsv.s;
 	var v = hsv.v;
+	
+	var hsv = {
+		h: h,
+		s: s,
+		v: v
+	}
+	
+	return hsv;
+}
+
+function complement(r, g, b)
+{
+	var hsv = getComplementHsv(r, g, b);
+	
+	// convert back to rgb
+	var rgb = hsvToRgb(hsv);
+	
+	return rgb;
+}
+
+/* returns object containing split complements of a color given its RGB or false if s = 0
+ * formula derived from http://stackoverflow.com/questions/9577590/formula-to-find-the-split-complementaries-of-a-color */
+function splitComp(r, g, b)
+{
+	var hsv = getComplementHsv(r, g, b);
+	
+	var h = hsv.h;
+	var s = hsv.s;
+	var v = hsv.v;
+	
 	// split complements
 	var h0 = (h + 30) % 360;
 	var h1 = (h - 30) % 360;
@@ -538,10 +575,7 @@ function splitComp(r, g, b)
 		s: s,
 		v: v
 	};
-	
-	console.log(hsv0);
-	console.log(hsv1);
-	
+		
 	// convert back to rgb
 	var rgb0 = hsvToRgb(hsv0);
 	var rgb1 = hsvToRgb(hsv1);
@@ -575,8 +609,11 @@ function updateHexInput(hex) {
 
 function updateSplitComps(r, g, b)
 {		
-		// calculate split complementries
+		// calculate split complements
 		var splitComps = splitComp(r, g, b);
+		
+		var r0, g0, b0;
+		var r1, g1, b1;
 		
 		// if false, returned, display same color
 		if (!splitComps) {
@@ -586,13 +623,13 @@ function updateSplitComps(r, g, b)
 		}
 		
 		else {
-			var r0 = splitComps[0].r;
-			var g0 = splitComps[0].g;
-			var b0 = splitComps[0].b;
+			r0 = splitComps[0].r;
+			g0 = splitComps[0].g;
+			b0 = splitComps[0].b;
 		
-			var r1 = splitComps[1].r;
-			var g1 = splitComps[1].g;
-			var b1 = splitComps[1].b;
+			r1 = splitComps[1].r;
+			g1 = splitComps[1].g;
+			b1 = splitComps[1].b;
 		}
 		
 		// determine hex
@@ -601,4 +638,30 @@ function updateSplitComps(r, g, b)
 		
 		$('#split-swatch0').css('background-color', 'rgb(' + r0 + ',' + g0 + ',' + b0 + ')');
 		$('#split-swatch1').css('background-color', 'rgb(' + r1 + ',' + g1 + ',' + b1 + ')');
+}
+
+function updateComp(r, g, b)
+{
+	// calculate complement
+	var comp = complement(r, g, b);
+	
+	var r0, g0, b0;
+	
+	// if false, returned, display same color
+	if (!comp) {
+		r0 = r;
+		g0 = g;
+		b0 = b;
+	}
+	
+	else {
+		r0 = comp.r;
+		g0 = comp.g;
+		b0 = comp.b;
+	}
+	
+	// determine hex
+	var hex = rgbToHex(r0, g0, b0);
+	
+	$('#comp-swatch').css('background-color', '#' + hex);
 }

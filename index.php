@@ -65,6 +65,11 @@
 		
 		<div id="swatch"></div>
 		
+		<h4>Complement</h4>
+		<div>
+			<div class="comp-swatch" id="comp-swatch"></div>
+		</div>
+		
 		<h4>Split Complement</h4>
 		<div>
 			<div class="split-swatch" id="split-swatch0"></div>
