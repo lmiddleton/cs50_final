@@ -33,6 +33,7 @@
     		else
       		{
       			// convert to png and store in uploads folder
+      			// conversion snippet modified from http://stackoverflow.com/questions/8550015/convert-jpg-gif-image-to-png-in-php
       				imagepng(imagecreatefromstring(file_get_contents($_FILES["file"]["tmp_name"])), "../upload/" . $filename . ".png");
       			
       			// update filename with new extension

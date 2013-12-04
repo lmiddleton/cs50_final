@@ -1,0 +1,48 @@
+/*
+h1, h2 {
+	font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
+}
+*/
+
+#swatch {
+	height: 80px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+#r {
+	background-color: #f18383;
+}
+
+#g {
+	background-color: #83f193;
+}
+
+#b {
+	background-color: #83b7f1;
+}
+
+.split-swatch {
+	width: 50%;
+	height: 40px;
+	float: left;
+}
+
+.rgb {
+	display: inline-block;
+}
+
+.rgb input {
+	text-align: right;
+}
+
+.palette {
+	clear: left;
+	margin-bottom: 7px;
+}
+
+.palette-swatch {
+	float: left;
+	width: 30px;
+	height: 20px;
+}

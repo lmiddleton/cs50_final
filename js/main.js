@@ -1,21 +1,20 @@
 $(document).ready(function(){
-	//initHandleKeypress();
-	handleConvert();
+	initHandleKeypress();
+	//handleConvert();
 	
 	// set dropzone options
 	Dropzone.options.drop = {
 		acceptedFiles: '.jpeg, .jpg, .gif, .png',
 		init: function() {
 			this.on("success", function(file, response) {
-				console.log(response);
 				// parse the response
 				var object = $.parseJSON(response);
 				
 				// print the color palette
-				$('#middle').append('<div style="clear: left; margin-bottom: 7px;">');
+				$('#middle').append('<div class="palette">');
 				for (var i = 0, n = object.length; i < n; i++)
 				{
-					$('#middle').append('<div class="upload-swatch" style="float: left; width: 30px; height: 20px; background-color: rgb(' + object[i] + ')"></div>');
+					$('#middle').append('<div class="palette-swatch" style="background-color: rgb(' + object[i] + ')"></div>');
 				}
 				$('#right').append('</div>');
 			});
@@ -24,60 +23,34 @@ $(document).ready(function(){
 	};
 	
 	// handle click on swatches from upload
-	$(document).on('click', '.upload-swatch', function() {
-		// grab color in 'rgb(?,?,?)' format
+	$(document).on('click', '.palette-swatch', function() {
+		// grab color (rgb(?,?,?)' format)
 		var rgb = $(this).css('background-color');
-		
 		
 		// trim extra characters
 		rgb = rgb.substring(4, rgb.length - 1);
 		
 		// split rgb
 		rgb = rgb.split(",");
-		console.log(rgb);
+		var r = rgb[0].trim();
+		var g = rgb[1].trim();
+		var b = rgb[2].trim();
 		
-		// load into inputs
-		$('#r').val(rgb[0].trim());
-		$('#g').val(rgb[1].trim());
-		$('#b').val(rgb[2].trim());
-	});
-	
-	// handle split complement button
-	$('#split-comp').on('click', function() {
+		// load into rgb inputs
+		updateRgbInputs(r, g, b);
 		
-		// grab rgb values
-		var r = $('#r').val();
-		var g = $('#g').val();
-		var b = $('#b').val();
+		// convert to hex
+		var hex = rgbToHex(r, g, b);
 		
-		// calculate split complementries
-		var splitComps = splitComp(r, g, b);
+		// load into hex input
+		updateHexInput(hex);
 		
-		// if false, returned, display same color
-		if (!splitComps) {
-			r0 = r1 = r;
-			g0 = g1 = g;
-			b0 = b1 = b;
-		}
+		// update main swatch
+		updateMainSwatch(hex);
 		
-		else {
-			var r0 = splitComps[0].r;
-			var g0 = splitComps[0].g;
-			var b0 = splitComps[0].b;
+		// update split comps
+		updateSplitComps(r, g, b);
 		
-			var r1 = splitComps[1].r;
-			var g1 = splitComps[1].g;
-			var b1 = splitComps[1].b;
-		}
-		
-		// determine hex
-		console.log(r0 + ',' + g0 + ',' + b0);
-		var hex0 = rgbToHex(r0, g0, b0);
-		var hex1 = rgbToHex(r1, g1, b1);
-		console.log(hex0 + ',' + hex1);
-		
-		$('#split-swatch0').css('background-color', 'rgb(' + r0 + ',' + g0 + ',' + b0 + ')');
-		$('#split-swatch1').css('background-color', 'rgb(' + r1 + ',' + g1 + ',' + b1 + ')');
 	});
 		
 });
@@ -93,17 +66,57 @@ var hexLetterKey = [
 ];
 
 /*handles keypress on HEX input*/
-/*
+// MAKE KEYUP SUBMIT THE FORM TO GET BENEFITS OF CLIENT SIDE VALIDATION??
 function initHandleKeypress()
 {
-	$('#hex').keypress(function() {
+	$('#hex').keyup(function() {
+		// get new hex
 		var hex = $(this).val();
-		hexToRgb(hex);
+		
+		// convert to rgb
+		var rgb = hexToRgb(hex);
+		var r = rgb.r;
+		var g = rgb.g;
+		var b = rgb.b;
+		console.log(r + ',' + g + ',' + b);
+		
+		// update rgb inputs
+		updateRgbInputs(r, g, b);
+		
+		// update main swatch
+		updateMainSwatch(hex);
+		
+		// update split comps
+		updateSplitComps(r, g, b);
+		
+	});
+	
+	$('#r, #g, #b').keyup(function() {
+		console.log('keyup');
+		
+		// grab rgb values
+		var r = $('#r').val();
+		var g = $('#g').val();
+		var b = $('#b').val();
+		
+		// convert to hex
+		var hex = rgbToHex(r, g, b);
+		console.log(hex);
+		
+		// update hex
+		updateHexInput(hex);
+		
+		// update swatch
+		updateMainSwatch(hex);
+		
+		// update split comps
+		updateSplitComps(r, g, b);
+		
 	});
 }
-*/
 
 /*handles convert form submit*/
+/*
 function handleConvert()
 {
 	$('#convert-form').submit(function(event) {
@@ -118,7 +131,7 @@ function handleConvert()
 		var b = $('#b').val();
 		
 		// convert to uppercase
-		// TODO
+		// TODO (done elsewhere currently)
 		
 		// if hex entered
 		if (hex != '')
@@ -135,9 +148,11 @@ function handleConvert()
 				// convert
 				var rgb = hexToRgb(hex);
 				
-				$('#r').val(rgb.r);
-				$('#g').val(rgb.g);
-				$('#b').val(rgb.b);
+				var r = rgb.r;
+				var g = rgb.g;
+				var b = rgb.b;
+				
+				updateRgbInputs(r, g, b);
 				
 				$('#swatch').css('background-color', '#' + hex);
 			}
@@ -168,11 +183,12 @@ function handleConvert()
 				// convert
 				var hex = rgbToHex(r, g, b);
 				$('#hex').val(hex);
-				rgbToCmyk(r, g, b);
+				//rgbToCmyk(r, g, b);
 				$('#swatch').css('background-color', 'rgb(' + r + ',' + g + ',' + b + ')');
 			}
 		}
 		
+		/*
 		// if cmyk entered
 		else if (c != '' || m != '' || y != '' || k != '')
 		{
@@ -200,7 +216,9 @@ function handleConvert()
 				//cmykToRgb(c, m, y, k);
 			}
 		}
+		*/
 		
+		/*
 		else
 		{
 			// nothing entered
@@ -209,6 +227,7 @@ function handleConvert()
 	
 	});
 }
+*/
 
 /* returns object with RGB values for the given 6 digit hex value
  * formula derived from http://www.pixel2life.com/publish/tutorials/164/using_php_to_convert_between_hex_and_rgb_values/
@@ -251,8 +270,8 @@ function rgbToHex(r, g, b)
 
 /*converts rgb values to cmyk values*/
 /*formulas derived from http://www.easyrgb.com/index.php?X=MATH&H=11#text11*/
-function rgbToCmyk(r, g, b)
-{
+//function rgbToCmyk(r, g, b)
+//{
 	/*
 	// first convert rgb -> cmy
 	var c = 1 - (r / 255);
@@ -290,6 +309,7 @@ function rgbToCmyk(r, g, b)
 	*/
 	
 	
+	/*
 	// version 2: http://www.rapidtables.com/convert/color/rgb-to-cmyk.htm
 	var red = r / 255;
 	console.log(red);
@@ -310,16 +330,17 @@ function rgbToCmyk(r, g, b)
 	$('#k').val(k);
 	
 }
+*/
 
 /* returns the hex character for a decimal value */
 function decToHex(value)
 {
-	// leave single digit values
+	// leave single digit values as is
 	if (value <= 9)
 	{
 		return value;
 	}
-	// double digit values are 
+	// double digit values translated into letter
 	else
 	{
 		for (var i = 0; i < hexLetterKey.length; i++)
@@ -360,9 +381,9 @@ function hexToDec(character)
 function rgbToHsv(r, g, b)
 {
 	// change rgb range from 0 to 1
-	var r = r/255;
-	var g = g/255;
-	var b = b/255;
+	var r = r / 255;
+	var g = g / 255;
+	var b = b / 255;
 	
 	var min = Math.min(r, g, b);
 	var max = Math.max(r, g, b);
@@ -485,23 +506,18 @@ function splitComp(r, g, b)
 {
 	// convert to hsv
 	var hsv = rgbToHsv(r, g, b);
-	console.log(hsv);
 	
 	// complement
-	// NEED THIS TO WRAP AROUND SO NEVER MORE THAN 360
 	if (hsv.s == 0)
 	{
 		return false;
 	}
 	var h = hsv.h + 180;
-	console.log('h: ' + h);
 	var s = hsv.s;
 	var v = hsv.v;
 	// split complements
 	var h0 = (h + 30) % 360;
-	console.log('h0: ' + h0);
 	var h1 = (h - 30) % 360;
-	console.log('h1: ' + h1);
 	
 	var hsv0 = {
 		h: h0,
@@ -520,13 +536,61 @@ function splitComp(r, g, b)
 	
 	// convert back to rgb
 	var rgb0 = hsvToRgb(hsv0);
-	//console.log(rgb0);
 	var rgb1 = hsvToRgb(hsv1);
-	//console.log(rgb1);
 	
 	var splitComps = new Array();
 	splitComps[0] = rgb0;
 	splitComps[1] = rgb1;
 	
 	return splitComps;
+}
+
+/*updates the swatch panel on the right with the selected or entered color*/
+function updateSwatchPanel()
+{
+	
+}
+
+function updateRgbInputs(r, g, b) {
+	$('#r').val(r);
+	$('#g').val(g);
+	$('#b').val(b);
+}
+
+function updateMainSwatch(hex) {
+	$('#swatch').css('background-color', '#' + hex);
+}
+
+function updateHexInput(hex) {
+	$('#hex').val(hex);
+}
+
+function updateSplitComps(r, g, b)
+{		
+		// calculate split complementries
+		var splitComps = splitComp(r, g, b);
+		
+		// if false, returned, display same color
+		if (!splitComps) {
+			r0 = r1 = r;
+			g0 = g1 = g;
+			b0 = b1 = b;
+		}
+		
+		else {
+			var r0 = splitComps[0].r;
+			var g0 = splitComps[0].g;
+			var b0 = splitComps[0].b;
+		
+			var r1 = splitComps[1].r;
+			var g1 = splitComps[1].g;
+			var b1 = splitComps[1].b;
+		}
+		
+		// determine hex
+		var hex0 = rgbToHex(r0, g0, b0);
+		var hex1 = rgbToHex(r1, g1, b1);
+		
+		$('#split-swatch0').css('background-color', 'rgb(' + r0 + ',' + g0 + ',' + b0 + ')');
+		$('#split-swatch1').css('background-color', 'rgb(' + r1 + ',' + g1 + ',' + b1 + ')');
 }

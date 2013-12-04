@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="js/dropzone/dropzone-3.7.3/downloads/css/dropzone.css" />
+	<link rel="stylesheet" href="css/styles.css" />
 	
 	<!-- JS -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -19,15 +20,6 @@
 </head>
 
 <body>
-	
-	<!--
-	<?php
-		for ($i = 0; $i < 10; $i++)
-		{
-			print $i;
-		}
-	?>
-	-->
 	
 	<h1>Palette</h1>
 	
@@ -40,11 +32,6 @@
 	
 		<div id="middle" class="col-md-5">
 			<h2>...to see its palette...</h2>
-			
-		
-	
-			
-	
 		</div>
 	
 	</div>
@@ -52,76 +39,37 @@
 	<div class="col-md-3">
 		<h2>...or enter a color.</h2>
 		
-		<div id="swatch" style="width: 40px; height: 30px; display: inline-block;"></div>
-		
 		<form id="convert-form">
-				<div>
-					<label for="hex">HEX:</label>
-					#<input id="hex" type="text" maxlength="7" />
-				</div>
-				
-				<br />
-		
-				<div>
-					<label for="r">R:</label>
-					<input id="r" type="number" min="0" max="255" style="background-color: #f18383;" />
-				</div>
-				
-				<div>
-					<label for="g">G:</label>
-					<input id="g" type="number" min="0" max="255" style="background-color: #83f193;" />
-				</div>
-			
-				<div>
-					<label for="b">B:</label>
-					<input id="b" type="number" min="0" max="255" style="background-color: #83b7f1;" />
-				</div>
-				
-				<br />
-				
-				<!--
-				<div>
-					<label for="c">C:</label>
-					<input id="c" type="number" min="0" max="100" />%
-				</div>
-				
-				<div>
-					<label for="m">M:</label>
-					<input id="m" type="number" min="0" max="100" />%
-				</div>
-				
-				<div>
-					<label for="y">Y:</label>
-					<input id="y" type="number" min="0" max="100" />%
-				</div>
-				
-				<div>
-					<label for="k">K:</label>
-					<input id="k" type="number" min="0" max="100" />%
-				</div>
-				
-				<br />
-				-->
-				
-				<div>
-					<input type="submit" value="Convert" />
-				</div>
-			
-			</form>
-	
-			<input id="split-comp" type="submit" value="Split Complement" />
 			<div>
-			<div id="split-swatch0" style="width: 40px; height: 30px; display: inline-block;"></div>
-		<div id="split-swatch1" style="width: 40px; height: 30px; display: inline-block;"></div>
-		</div>
-	
-			<!--
-			<form enctype="multipart/form-data" action="drop.php" method="POST">
-				<input type="file" name="file" />
-				<input type="submit" />
-			</form>
-			-->
+				<label for="hex">HEX:</label>
+				#<input id="hex" type="text" maxlength="7" />
+			</div>
+				
+			<br />
 		
+			<div class="rgb">
+				<label for="r">R:</label>
+				<input id="r" type="number" min="0" max="255" />
+			</div>
+				
+			<div class="rgb">
+				<label for="g">G:</label>
+				<input id="g" type="number" min="0" max="255" />
+			</div>
+			
+			<div class="rgb">
+				<label for="b">B:</label>
+				<input id="b" type="number" min="0" max="255" />
+			</div>
+		</form>
+		
+		<div id="swatch"></div>
+		
+		<h4>Split Complement</h4>
+		<div>
+			<div class="split-swatch" id="split-swatch0"></div>
+			<div class="split-swatch" id="split-swatch1"></div>
+		</div>
 		
 	</div>
 	
