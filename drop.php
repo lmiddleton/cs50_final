@@ -1,7 +1,7 @@
 <?php
 
 	// configuration
-    require("../includes/config.php");
+    require("functions.php");
     
     set_time_limit(100);
 	
