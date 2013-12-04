@@ -22,7 +22,7 @@ $(document).ready(function(){
 		maxFilesize: 5 // MB
 	};
 	
-	// handle click on swatches from upload
+	// handle click on palette swatches
 	$(document).on('click', '.palette-swatch', function() {
 		// grab color (rgb(?,?,?)' format)
 		var rgb = $(this).css('background-color');
@@ -50,7 +50,15 @@ $(document).ready(function(){
 		
 		// update split comps
 		updateSplitComps(r, g, b);
-		
+	});
+	
+	// handle hover on palette swatches
+	$(document).on('mouseover', '.palette-swatch', function() {
+		$(this).addClass('palette-swatch-hover');
+	});
+	
+	$(document).on('mouseleave', '.palette-swatch', function() {
+		$(this).removeClass('palette-swatch-hover');
 	});
 		
 });

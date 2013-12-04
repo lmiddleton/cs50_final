@@ -4,6 +4,10 @@ h1, h2 {
 }
 */
 
+h1 {
+	margin-left: 30px;
+}
+
 #swatch {
 	height: 80px;
 	margin-bottom: 10px;
@@ -45,4 +49,9 @@ h1, h2 {
 	float: left;
 	width: 30px;
 	height: 20px;
+}
+
+.palette-swatch-hover {
+	border: solid 3px red;
+	cursor: pointer;
 }
