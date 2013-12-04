@@ -35,7 +35,7 @@
 	
 		<div class="col-md-7">
 			<h2>Upload an image...</h2>
-			<form enctype="multipart/form-data" action="drop.php" class="dropzone" id="drop" style=""></form>
+			<form enctype="multipart/form-data" action="php/drop.php" class="dropzone" id="drop" style=""></form>
 		</div>
 	
 		<div id="middle" class="col-md-5">
