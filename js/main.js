@@ -86,9 +86,7 @@ function initHandleKeypress()
 	});
 	
 	$('#r, #g, #b').bind("change keyup", function() {
-		
-		console.log('does backspace work?');
-		
+				
 		// grab rgb values
 		var r = $('#r').val();
 		var g = $('#g').val();
@@ -96,7 +94,6 @@ function initHandleKeypress()
 				
 		// convert to hex
 		var hex = rgbToHex(r, g, b);
-		console.log('hex: ' + hex);
 		
 		updateSwatchPanel(r, g, b, hex)
 		
@@ -231,7 +228,6 @@ function hexToRgb(hexCode)
 	// if 3 digit hex, convert to 6 digit
 	if (hex.length == 3)
 	{
-		console.log('inside');
 		var h0 = hex.slice(0,1);
 		var h1 = hex.slice(1,2);
 		var h2 = hex.slice(2,3);
@@ -576,10 +572,7 @@ function updateRgbInputs(r, g, b) {
 }
 
 function updateMainSwatch(r, g, b) {
-	console.log('updateMainSwatch');
-	console.log(r + ',' + g + ',' + b);
 	var hex = rgbToHex(r, g, b);
-	console.log(hex);
 	$('#swatch').css('background-color', '#' + hex);
 }
 
