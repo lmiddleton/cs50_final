@@ -42,7 +42,7 @@
 		<form id="convert-form">
 			<div>
 				<label for="hex">HEX:</label>
-				#<input id="hex" type="text" maxlength="7" />
+				#<input id="hex" type="text" maxlength="6" />
 			</div>
 				
 			<br />
@@ -63,17 +63,20 @@
 			</div>
 		</form>
 		
-		<div id="swatch"></div>
+		<div id="swatches">
+			<div id="swatch"></div>
 		
-		<h4>Complement</h4>
-		<div>
-			<div class="comp-swatch" id="comp-swatch"></div>
-		</div>
+			<h4>Complement</h4>
+			<div>
+				<div class="comp-swatch" id="comp-swatch"></div>
+			</div>
 		
-		<h4>Split Complement</h4>
-		<div>
-			<div class="split-swatch" id="split-swatch0"></div>
-			<div class="split-swatch" id="split-swatch1"></div>
+			<h4>Split Complement</h4>
+			<div>
+				<div class="split-swatch" id="split-swatch0"></div>
+				<div class="split-swatch" id="split-swatch1"></div>
+			</div>
+		
 		</div>
 		
 	</div>

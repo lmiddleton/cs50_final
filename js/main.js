@@ -37,24 +37,11 @@ $(document).ready(function(){
 		var r = rgb[0].trim();
 		var g = rgb[1].trim();
 		var b = rgb[2].trim();
-		
-		// load into rgb inputs
-		updateRgbInputs(r, g, b);
 				
 		// convert to hex
 		var hex = rgbToHex(r, g, b);
 		
-		// load into hex input
-		updateHexInput(hex);
-		
-		// update main swatch
-		updateMainSwatch(hex);
-		
-		// update comp
-		updateComp(r, g, b);
-		
-		// update split comps
-		updateSplitComps(r, g, b);
+		updateSwatchPanel(r, g, b, hex);
 	});
 	
 	// handle hover on palette swatches
@@ -82,7 +69,9 @@ var hexLetterKey = [
 // MAKE KEYUP SUBMIT THE FORM TO GET BENEFITS OF CLIENT SIDE VALIDATION??
 function initHandleKeypress()
 {
-	$('#hex').keyup(function() {
+	// combine change and keyup to handle pasting, etc. without having to wait for focus change
+	// snippet from http://stackoverflow.com/questions/7316283/trigger-change-event-and-keyup-event-in-select-element
+	$('#hex').bind("change keyup", function() {
 		// get new hex
 		var hex = $(this).val();
 		
@@ -92,44 +81,28 @@ function initHandleKeypress()
 		var g = rgb.g;
 		var b = rgb.b;
 		
-		// update rgb inputs
-		updateRgbInputs(r, g, b);
-		
-		// update main swatch
-		updateMainSwatch(hex);
-		
-		// update comp
-		updateComp(r, g, b);
-		
-		// update split comps
-		updateSplitComps(r, g, b);
+		updateSwatchPanel(r, g, b, hex);
 		
 	});
 	
-	$('#r, #g, #b').keyup(function() {
-		console.log('keyup');
+	$('#r, #g, #b').bind("change keyup", function() {
+		
+		console.log('does backspace work?');
 		
 		// grab rgb values
 		var r = $('#r').val();
 		var g = $('#g').val();
 		var b = $('#b').val();
-		
+				
 		// convert to hex
 		var hex = rgbToHex(r, g, b);
+		console.log('hex: ' + hex);
 		
-		// update hex
-		updateHexInput(hex);
-		
-		// update main swatch
-		updateMainSwatch(hex);
-		
-		// update comp
-		updateComp(r, g, b);
-		
-		// update split comps
-		updateSplitComps(r, g, b);
+		updateSwatchPanel(r, g, b, hex)
 		
 	});
+	
+	
 }
 
 /*handles convert form submit*/
@@ -153,6 +126,7 @@ function handleConvert()
 		// if hex entered
 		if (hex != '')
 		{
+			// TODO: add 3 char hexes as well
 			var hexValid = /^[0-9a-fA-F]+$/;
 			
 			// validate hex
@@ -249,15 +223,45 @@ function handleConvert()
 /* returns object with RGB values for the given 6 digit hex value
  * formula derived from http://www.pixel2life.com/publish/tutorials/164/using_php_to_convert_between_hex_and_rgb_values/
  */
-function hexToRgb(hex)
+function hexToRgb(hexCode)
 {
 	// format with uppercase letters
-	var hex = hex.toUpperCase();
+	var hex = hexCode.toUpperCase();
+			
+	// if 3 digit hex, convert to 6 digit
+	if (hex.length == 3)
+	{
+		console.log('inside');
+		var h0 = hex.slice(0,1);
+		var h1 = hex.slice(1,2);
+		var h2 = hex.slice(2,3);
+		
+		hex = h0 + h0 + h1 + h1 + h2 + h2;
+	}
 	
 	// split into pairs and convert each
-	var r = hexToDec(hex.slice(0,1)) * 16 + parseInt(hexToDec(hex.slice(1,2)));
-	var g = hexToDec(hex.slice(2,3)) * 16 + parseInt(hexToDec(hex.slice(3,4)));
-	var b = hexToDec(hex.slice(4,5)) * 16 + parseInt(hexToDec(hex.slice(5,6)));
+	var rgbPairs = new Object();
+	rgbPairs.r0 = hex.slice(0,1);
+	rgbPairs.r1 = hex.slice(1,2);
+	
+	rgbPairs.g0 = hex.slice(2,3);
+	rgbPairs.g1 = hex.slice(3,4);
+	
+	rgbPairs.b0 = hex.slice(4,5);
+	rgbPairs.b1 = hex.slice(5,6);
+	
+	// fill in 0s for missing values
+	for (var i in rgbPairs)
+	{
+		if (rgbPairs[i] == '')
+		{
+			rgbPairs[i] = 0;
+		}
+	}
+	
+	var r = hexToDec(rgbPairs.r0) * 16 + parseInt(hexToDec(rgbPairs.r1));
+	var g = hexToDec(rgbPairs.g0) * 16 + parseInt(hexToDec(rgbPairs.g1));
+	var b = hexToDec(rgbPairs.b0) * 16 + parseInt(hexToDec(rgbPairs.b1));
 	
 	// build RGB object
 	var rgb = new Object();
@@ -271,8 +275,23 @@ function hexToRgb(hex)
 /* returns 6 digit hex value for the given RGB values
  * formula derived from http://gristle.tripod.com/hexconv.html
  */
-function rgbToHex(r, g, b)
+function rgbToHex(red, green, blue)
 {
+	var r = red;
+	var g = green;
+	var b = blue;
+	
+	// fill in 0s for missing values
+	if (r == '') {
+		r = 0;
+	}
+	if (g == '') {
+		g = 0;
+	}
+	if (b == '') {
+		b = 0;
+	}
+
 	// calculate pairs
 	var reds = decToHex(Math.floor(r / 16)) + (decToHex(r % 16)).toString();
 	var greens = decToHex(Math.floor(g / 16)) + (decToHex(g % 16)).toString();
@@ -283,70 +302,6 @@ function rgbToHex(r, g, b)
 	
 	return hex;
 }
-
-/*converts rgb values to cmyk values*/
-/*formulas derived from http://www.easyrgb.com/index.php?X=MATH&H=11#text11*/
-//function rgbToCmyk(r, g, b)
-//{
-	/*
-	// first convert rgb -> cmy
-	var c = 1 - (r / 255);
-	var m = 1 - (g / 255);
-	var y = 1 - (b / 255);
-	
-	// then convert cmy -> cmyk
-	var k = 1;
-	
-	if (c < k)
-	{
-		k = c;
-	}
-	if (m < k)
-	{
-		k = m;
-	}
-	if (y < k)
-	{
-		k = y;
-	}
-	if (k == 1)
-	{
-		// black
-		c = 0;
-		m = 0;
-		y = 0;
-	}
-	else
-	{
-		c = (c - k) / (1 - k);
-		m = (m - k) / (1 - k);
-		y = (y - k) / (1 - k);
-	}
-	*/
-	
-	
-	/*
-	// version 2: http://www.rapidtables.com/convert/color/rgb-to-cmyk.htm
-	var red = r / 255;
-	console.log(red);
-	var green = g / 255;
-	console.log(green);
-	var blue = b / 255;
-	console.log(blue);
-	
-	var k = 1 - Math.max(red, green, blue);
-	console.log(Math.max(red, green, blue));
-	var c = (1 - red - k) / (1 - k);
-	var m = (1 - green - k) / (1 - k);
-	var y = (1 - blue - k) / (1 - k);
-	
-	$('#c').val(c);
-	$('#m').val(m);
-	$('#y').val(y);
-	$('#k').val(k);
-	
-}
-*/
 
 /* returns the hex character for a decimal value */
 function decToHex(value)
@@ -593,9 +548,25 @@ function splitComp(r, g, b)
 }
 
 /*updates the swatch panel on the right with the selected or entered color*/
-function updateSwatchPanel()
+function updateSwatchPanel(r, g, b, hex)
 {
-	
+	// show swatches
+	$('#swatches').show();
+		
+	// load into rgb inputs
+	updateRgbInputs(r, g, b);
+		
+	// load into hex input
+	updateHexInput(hex);
+		
+	// update main swatch
+	updateMainSwatch(r, g, b);
+		
+	// update comp
+	updateComp(r, g, b);
+		
+	// update split comps
+	updateSplitComps(r, g, b);	
 }
 
 function updateRgbInputs(r, g, b) {
@@ -604,7 +575,11 @@ function updateRgbInputs(r, g, b) {
 	$('#b').val(b);
 }
 
-function updateMainSwatch(hex) {
+function updateMainSwatch(r, g, b) {
+	console.log('updateMainSwatch');
+	console.log(r + ',' + g + ',' + b);
+	var hex = rgbToHex(r, g, b);
+	console.log(hex);
 	$('#swatch').css('background-color', '#' + hex);
 }
 
