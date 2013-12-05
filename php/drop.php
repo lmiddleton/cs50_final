@@ -36,10 +36,10 @@
       			// conversion snippet modified from http://stackoverflow.com/questions/8550015/convert-jpg-gif-image-to-png-in-php
       				imagepng(imagecreatefromstring(file_get_contents($_FILES["file"]["tmp_name"])), "../upload/" . $filename . ".png");
       			
-      			// update filename with new extension
-      			$filename = $filename . ".png";
-      			
       		}
+      		
+      		// update filename with new extension
+      		$filename = $filename . ".png";
       		
       		// store path to file
       		$img_path = "../upload/" . $filename;
