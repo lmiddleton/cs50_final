@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	initHandleKeypress();
-	//handleConvert();
+	handleConvert();
 	
 	// set dropzone options
 	Dropzone.options.drop = {
@@ -20,6 +20,8 @@ $(document).ready(function(){
 			},500);
 		},
 		acceptedFiles: '.jpeg, .jpg, .gif, .png',
+		addRemoveLinks: true,
+		dictRemoveFile: 'Remove',
 		init: function() {
 			this.on("success", function(file, response) {
 				//console.log(response);
@@ -42,6 +44,9 @@ $(document).ready(function(){
 	// handle click on palette swatches
 	$(document).on('click', '.palette-swatch', function(event) {
 		event.stopImmediatePropagation();
+		
+		// show swatches
+		$('#swatches').show();
 	
 		// grab color (rgb(?,?,?)' format)
 		var rgb = $(this).css('background-color');
@@ -88,7 +93,21 @@ function initHandleKeypress()
 {
 	// combine change and keyup to handle pasting, etc. without having to wait for focus change
 	// snippet from http://stackoverflow.com/questions/7316283/trigger-change-event-and-keyup-event-in-select-element
-	$('#hex').bind("change keyup", function() {
+	$('#hex').bind("change keyup", function(event) {
+		
+		// prevent arrow keys triggering submit
+		// from http://stackoverflow.com/questions/17807300/keypress-event-ignore-arrow-keys
+		// get keycode of current keypress event
+    	var code = (event.keyCode ? event.keyCode : event.which);
+
+    	// do nothing if it's an arrow key
+   		if(code == 37 || code == 38 || code == 39 || code == 40) {
+        	return;
+    	}
+
+		
+		$("#convert-form").submit();
+	
 		// get new hex
 		var hex = $(this).val();
 		
@@ -102,7 +121,16 @@ function initHandleKeypress()
 		
 	});
 	
-	$('#r, #g, #b').bind("change keyup", function() {
+	$('#r, #g, #b').bind("change keyup", function(event) {
+		// get keycode of current keypress event
+    	var code = (event.keyCode ? event.keyCode : event.which);
+
+    	// do nothing if it's an arrow key
+   		if(code == 37 || code == 38 || code == 39 || code == 40) {
+        	return;
+    	}
+		
+		$("#convert-form").submit();
 				
 		// grab rgb values
 		var r = $('#r').val();
@@ -120,12 +148,14 @@ function initHandleKeypress()
 }
 
 /*handles convert form submit*/
-/*
+
 function handleConvert()
 {
 	$('#convert-form').submit(function(event) {
 		// prevent page reload
 		event.preventDefault();
+		
+		clearError();
 		
 		// store input
 		var hex = $('#hex').val();
@@ -142,12 +172,17 @@ function handleConvert()
 		{
 			// TODO: add 3 char hexes as well
 			var hexValid = /^[0-9a-fA-F]+$/;
-			
+						
 			// validate hex
-			if (hex.length != 6 || !hex.match(hexValid))
+			if ((hex.length != 6 && hex.length != 3) || !hex.match(hexValid))
 			{
-				alert('Please enter a valid HEX code.');
+				error('Invalid Hex');
 			}
+			else {
+				// show swatches
+				$('#swatches').show();
+			}
+			/*
 			else
 			{
 				// convert
@@ -161,28 +196,28 @@ function handleConvert()
 				
 				$('#swatch').css('background-color', '#' + hex);
 			}
+			*/
 		}
 		
 		// if rgb entered
-		else if (r != '' || g != '' || b != '')
+		if (r != '' && g != '' && b != '')
 		{
 			var rgbValid = /^[0-9]+$/;
 		
-			// check all 3 are entered
-			if (r == '' || g == '' || b == '')
-			{
-				alert('Please enter all 3 RGB values.');
-			}
-			
 			// validate rgb
-			else if ((r > 255 || !r.match(rgbValid)) ||
-					 (g > 255 || !g.match(rgbValid)) ||
-					 (b > 255 || !b.match(rgbValid))
-					)
+			if ((r > 255 || !r.match(rgbValid)) ||
+				(g > 255 || !g.match(rgbValid)) ||
+				(b > 255 || !b.match(rgbValid))
+				)
 			{
-				alert('Please enter valid RGB values.');
+				error('Invalid RGB value.');
+			}
+			else {
+				// show swatches
+				$('#swatches').show();
 			}
 			
+			/*
 			else
 			{
 				// convert
@@ -191,6 +226,7 @@ function handleConvert()
 				//rgbToCmyk(r, g, b);
 				$('#swatch').css('background-color', 'rgb(' + r + ',' + g + ',' + b + ')');
 			}
+			*/
 		}
 		
 		/*
@@ -222,17 +258,10 @@ function handleConvert()
 			}
 		}
 		*/
-		
-		/*
-		else
-		{
-			// nothing entered
-			alert('Please enter a value to convert.');
-		}
 	
 	});
 }
-*/
+
 
 /* returns object with RGB values for the given 6 digit hex value
  * formula derived from http://www.pixel2life.com/publish/tutorials/164/using_php_to_convert_between_hex_and_rgb_values/
@@ -562,10 +591,7 @@ function splitComp(r, g, b)
 
 /*updates the swatch panel on the right with the selected or entered color*/
 function updateSwatchPanel(r, g, b, hex)
-{
-	// show swatches
-	$('#swatches').show();
-		
+{		
 	// load into rgb inputs
 	updateRgbInputs(r, g, b);
 		
@@ -676,4 +702,13 @@ function checkDim(file) {
     image.onerror = function() {
         alert('Invalid file type: '+ file.type);
     };   
+}
+
+function error(message) {
+	$('#error').html(message);
+	$('#swatches').hide();
+}
+
+function clearError() {
+	$('#error').html('');
 }

@@ -40,6 +40,7 @@
 		<h2>...or enter a color.</h2>
 		
 		<form id="convert-form">
+			<div id="error"></div>
 			<div>
 				<label for="hex">HEX:</label>
 				#<input id="hex" type="text" maxlength="6" />
