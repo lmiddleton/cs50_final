@@ -4,9 +4,26 @@ $(document).ready(function(){
 	
 	// set dropzone options
 	Dropzone.options.drop = {
+		accept: function(file, done) {
+			// check file dimensions
+			checkDim(file);
+			
+			// timeout needed to prevent width and height being undefined
+			setTimeout(function(){
+				var width = $("#width").html();
+				var height = $("#height").html();			
+			
+				if (width > 1000 || height > 1000) {
+					done("File width and height must be less than 1000.");
+				}
+				else { done(); }
+			},500);
+		},
 		acceptedFiles: '.jpeg, .jpg, .gif, .png',
 		init: function() {
 			this.on("success", function(file, response) {
+				//console.log(response);
+				
 				// parse the response
 				var object = $.parseJSON(response);
 				
@@ -637,4 +654,26 @@ function updateComp(r, g, b)
 	var hex = rgbToHex(r0, g0, b0);
 	
 	$('#comp-swatch').css('background-color', '#' + hex);
+}
+
+/* returns JS object with width and height of image file
+ * modified from: http://stackoverflow.com/questions/12570834/how-to-preview-image-get-file-size-image-height-and-width-before-upload
+ */
+function checkDim(file) {
+	var reader = new FileReader();
+    var image = new Image();
+
+    reader.readAsDataURL(file);  
+    reader.onload = function(_file) {
+        image.src = _file.target.result; // url.createObjectURL(file);
+        image.onload = function() {
+            var w = this.width;
+            var h = this.height;
+            $("#width").html(w);
+            $("#height").html(h);
+        };
+    };
+    image.onerror = function() {
+        alert('Invalid file type: '+ file.type);
+    };   
 }

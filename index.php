@@ -81,6 +81,9 @@
 		
 	</div>
 	
+	<div id="width" style="display: none;"></div>
+	<div id="height" style="display: none;"></div>
+	
 </body>
 
 </html>

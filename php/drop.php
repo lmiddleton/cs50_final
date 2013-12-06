@@ -7,16 +7,20 @@
     set_time_limit(100);
 	
 	// upload script modified from http://www.w3schools.com/php/php_file_upload.asp
-	$allowedExts = array("gif", "jpeg", "jpg", "png");
+	$allowedExts = array("gif", "GIF", "jpeg", "JPEG", "jpg", "JPG", "png", "PNG");
 	$temp = explode(".", $_FILES["file"]["name"]);
 	$filename = $temp[0];
 	$extension = end($temp);
 	if ((($_FILES["file"]["type"] == "image/gif")
+		|| ($_FILES["file"]["type"] == "image/GIF")
 		|| ($_FILES["file"]["type"] == "image/jpeg")
+		|| ($_FILES["file"]["type"] == "image/JPEG")
 		|| ($_FILES["file"]["type"] == "image/jpg")
-		|| ($_FILES["file"]["type"] == "image/pjpeg")
-		|| ($_FILES["file"]["type"] == "image/x-png")
-		|| ($_FILES["file"]["type"] == "image/png"))
+		|| ($_FILES["file"]["type"] == "image/JPG")
+		//|| ($_FILES["file"]["type"] == "image/pjpeg")
+		//|| ($_FILES["file"]["type"] == "image/x-png")
+		|| ($_FILES["file"]["type"] == "image/png")
+		|| ($_FILES["file"]["type"] == "image/PNG"))
 		&& ($_FILES["file"]["size"] < 5242880) // in bytes (5MB max)
 		&& in_array($extension, $allowedExts))
   	{
