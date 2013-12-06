@@ -156,6 +156,7 @@ function handleConvert()
 		event.preventDefault();
 		
 		clearError();
+		$('#swatches').show();
 		
 		// store input
 		var hex = $('#hex').val();
@@ -164,13 +165,9 @@ function handleConvert()
 		var g = $('#g').val();
 		var b = $('#b').val();
 		
-		// convert to uppercase
-		// TODO (done elsewhere currently)
-		
 		// if hex entered
 		if (hex != '')
 		{
-			// TODO: add 3 char hexes as well
 			var hexValid = /^[0-9a-fA-F]+$/;
 						
 			// validate hex
@@ -178,25 +175,6 @@ function handleConvert()
 			{
 				error('Invalid Hex');
 			}
-			else {
-				// show swatches
-				$('#swatches').show();
-			}
-			/*
-			else
-			{
-				// convert
-				var rgb = hexToRgb(hex);
-				
-				var r = rgb.r;
-				var g = rgb.g;
-				var b = rgb.b;
-				
-				updateRgbInputs(r, g, b);
-				
-				$('#swatch').css('background-color', '#' + hex);
-			}
-			*/
 		}
 		
 		// if rgb entered
@@ -212,53 +190,7 @@ function handleConvert()
 			{
 				error('Invalid RGB value.');
 			}
-			else {
-				// show swatches
-				$('#swatches').show();
-			}
-			
-			/*
-			else
-			{
-				// convert
-				var hex = rgbToHex(r, g, b);
-				$('#hex').val(hex);
-				//rgbToCmyk(r, g, b);
-				$('#swatch').css('background-color', 'rgb(' + r + ',' + g + ',' + b + ')');
-			}
-			*/
 		}
-		
-		/*
-		// if cmyk entered
-		else if (c != '' || m != '' || y != '' || k != '')
-		{
-			var cmykValid = /^[0-9]+$/;
-		
-			// check all 4 are entered
-			if (c == '' || m == '' || y == '' || k == '')
-			{
-				alert('Please enter all 4 CMYK values.');
-			}
-			
-			// validate cmyk
-			else if ((c > 100 || !c.match(cmykValid)) ||
-					 (m > 100 || !m.match(cmykValid)) ||
-					 (y > 100 || !y.match(cmykValid)) ||
-					 (k > 100 || !k.match(cmykValid))
-					)
-			{
-				alert('Please enter valid CMYK values.');
-			}
-			
-			else
-			{
-				//convert
-				//cmykToRgb(c, m, y, k);
-			}
-		}
-		*/
-	
 	});
 }
 
