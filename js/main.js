@@ -21,8 +21,8 @@ function setDropOps()
 				var width = $("#width").html();
 				var height = $("#height").html();			
 			
-				if (width > 1000 || height > 1000) {
-					done("File width and height must be less than 1000.");
+				if (width > 2500 || height > 2500) {
+					done("Width and height must be less than 2500.");
 				}
 				else { done(); }
 			},500);
