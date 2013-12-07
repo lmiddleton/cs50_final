@@ -166,6 +166,12 @@ function rgbToHsv(r, g, b)
 	var g = g / 255;
 	var b = b / 255;
 	
+	// fix for certain yellows
+	if (g >= 0.8)
+	{
+		g = 1;
+	}
+	
 	var min = Math.min(r, g, b);
 	var max = Math.max(r, g, b);
 	
