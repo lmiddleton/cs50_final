@@ -162,16 +162,17 @@ function hexToDec(character)
 function rgbToHsv(r, g, b)
 {
 	// change rgb range from 0 to 1
-	var r = r / 255;
-	var g = g / 255;
-	var b = b / 255;
+	var r = (r / 255).toFixed(1);
+	var g = (g / 255).toFixed(1);
+	var b = (b / 255).toFixed(1);
 	
 	// fix for certain yellows
-	if (g >= 0.8)
+	if (g >= 0.7)
 	{
 		g = 1;
 	}
 	
+	console.log(r + ',' + g + ',' + b);
 	var min = Math.min(r, g, b);
 	var max = Math.max(r, g, b);
 	
@@ -194,14 +195,17 @@ function rgbToHsv(r, g, b)
 	if (hsv.r == max) {
 		// between yellow and magenta
 		hsv.h = (g - b) / delta;
+		console.log('1');
 	}
 	else if (g == max) {
 		// between cyan and yellow
 		hsv.h = 2 + (b - r) / delta;
+		console.log('2');
 	}
 	else {
 		// between magenta and cyan
 		hsv.h = 4 + (r - g) / delta;
+		console.log('3');
 	}
 	
 	// degrees
@@ -210,6 +214,7 @@ function rgbToHsv(r, g, b)
 		hsv.h = hsv.h + 360;
 	}
 	
+	console.log(hsv);
 	return hsv;
 }
 
