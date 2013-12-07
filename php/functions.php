@@ -19,7 +19,7 @@ function dump($variable)
 function get_palette($img, $width, $height, &$palette)
 {
 	// set color uniqueness factor
-	$factor = 70;
+	$factor = 50;
 	
 	// loop through each col of pixels
   	for ($i = 0; $i < $width; $i++)

@@ -70,3 +70,13 @@ h1 {
 	font-size: smaller;
 	margin-bottom: 7px;
 }
+
+.hidden {
+	display: none;
+}
+
+.code {
+	color: #666;
+	font-family: "Courier New", Courier, monospace;
+	font-size: 1.1em;
+}

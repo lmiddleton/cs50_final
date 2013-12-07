@@ -28,7 +28,7 @@ function setDropOps()
 			},500);
 		},
 		acceptedFiles: '.jpeg, .jpg, .gif, .png',
-		addRemoveLinks: true,
+		//addRemoveLinks: true,
 		dictRemoveFile: 'Remove',
 		init: function() {
 			this.on("success", function(file, response) {
@@ -52,11 +52,11 @@ function setDropOps()
 /* sets the palette swatch hover behavior */
 function handlePaletteHover()
 {
-	$(document).on('mouseover', '.palette-swatch', function() {
+	$(document).on('mouseover', '.palette-swatch, #comp-swatch, .split-swatch', function() {
 		$(this).addClass('palette-swatch-hover');
 	});
 	
-	$(document).on('mouseleave', '.palette-swatch', function() {
+	$(document).on('mouseleave', '.palette-swatch, #comp-swatch, .split-swatch', function() {
 		$(this).removeClass('palette-swatch-hover');
 	});
 }
@@ -65,7 +65,7 @@ function handlePaletteHover()
 function handlePaletteClick()
 {
 	// on click
-	$(document).on('click', '.palette-swatch', function(event) {
+	$(document).on('click', '.palette-swatch, #comp-swatch, .split-swatch', function(event) {
 		event.stopImmediatePropagation();
 		
 		// show swatches
@@ -205,12 +205,27 @@ function updateSwatchPanel(r, g, b, hex)
 		
 	// update main swatch
 	updateMainSwatch(r, g, b);
-		
+	
 	// update comp
 	updateComp(r, g, b);
 		
 	// update split comps
 	updateSplitComps(r, g, b);	
+}
+
+/* returns example hex css snippet for the given hex */
+function getHexCss(hex) {
+	return 'background-color: #' + hex + ';';
+}
+
+/* returns example rgb css snippet for the given values*/
+function getRgbCss(r, g, b) {
+	return 'color: rgb(' + r + ',' + g + ',' + b + ');';
+}
+
+/* updates the css snippets in the given html element*/
+function updateCssSnip(container, hex, r, g, b) {
+	$(container).html(getRgbCss(r, g, b) + '<br />' + getHexCss(hex));
 }
 
 /* updates the rgb inputs with the provided values */
@@ -224,6 +239,8 @@ function updateRgbInputs(r, g, b) {
 function updateMainSwatch(r, g, b) {
 	var hex = rgbToHex(r, g, b);
 	$('#swatch').css('background-color', '#' + hex);
+	// update main swatch css
+	updateCssSnip('#swatch-code', hex, r, g, b);
 }
 
 /* updates the hex input with the provided value */
@@ -261,6 +278,7 @@ function updateSplitComps(r, g, b)
 		var hex0 = rgbToHex(r0, g0, b0);
 		var hex1 = rgbToHex(r1, g1, b1);
 		
+		// update swatches
 		$('#split-swatch0').css('background-color', '#' + hex0);
 		$('#split-swatch1').css('background-color', '#' + hex1);
 }
@@ -289,6 +307,7 @@ function updateComp(r, g, b)
 	// determine hex
 	var hex = rgbToHex(r0, g0, b0);
 	
+	// update swatch
 	$('#comp-swatch').css('background-color', '#' + hex);
 }
 

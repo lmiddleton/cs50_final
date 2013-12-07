@@ -66,25 +66,23 @@
 		</form>
 		
 		<div id="swatches">
+			<h4>Color</h4>
 			<div id="swatch"></div>
+			<div id="swatch-code" class="code"></div>
 		
 			<h4>Complement</h4>
-			<div>
-				<div class="comp-swatch" id="comp-swatch"></div>
-			</div>
+			<div class="comp-swatch" id="comp-swatch"></div>
 		
 			<h4>Split Complement</h4>
-			<div>
-				<div class="split-swatch" id="split-swatch0"></div>
-				<div class="split-swatch" id="split-swatch1"></div>
-			</div>
+			<div class="split-swatch" id="split-swatch0"></div>
+			<div class="split-swatch" id="split-swatch1"></div>
 		
 		</div>
 		
 	</div>
 	
-	<div id="width" style="display: none;"></div>
-	<div id="height" style="display: none;"></div>
+	<div id="width" class="hidden";"></div>
+	<div id="height" class="hidden"></div>
 	
 </body>
 

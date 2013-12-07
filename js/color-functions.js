@@ -82,10 +82,31 @@ function rgbToHex(red, green, blue)
 	}
 
 	// calculate pairs
-	var reds = decToHex(Math.floor(r / 16)) + (decToHex(r % 16)).toString();
-	var greens = decToHex(Math.floor(g / 16)) + (decToHex(g % 16)).toString();
-	var blues = decToHex(Math.floor(b / 16)) + (decToHex(b % 16)).toString();
+	var rgbPairs = {
+		
+		red0: decToHex(Math.floor(r / 16)),
+		red1: decToHex(r % 16).toString(),
 	
+		green0: decToHex(Math.floor(g / 16)),
+		green1: decToHex(g % 16).toString(),
+	
+		blue0: decToHex(Math.floor(b / 16)),
+		blue1: decToHex(b % 16).toString()
+	};
+	
+	// if undefined b/c of bad rgb value, set to empty string
+	for (var i in rgbPairs)
+	{
+		if(rgbPairs[i] == undefined)
+		{
+			rgbPairs[i] = '';
+		}
+	}
+	
+	var reds = rgbPairs.red0 + rgbPairs.red1;
+	var greens = rgbPairs.green0 + rgbPairs.green1;
+	var blues = rgbPairs.blue0 + rgbPairs.blue1;
+		
 	// build hex
 	var hex = reds + greens + blues;
 	
