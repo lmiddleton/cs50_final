@@ -167,7 +167,7 @@ function rgbToHsv(r, g, b)
 	var b = (b / 255).toFixed(1);
 	
 	// fix for certain yellows
-	if (g >= 0.7)
+	if (r != g && r != b && g != b && g >= 0.7)
 	{
 		g = 1;
 	}
