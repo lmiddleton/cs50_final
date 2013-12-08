@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Palette - Design</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap/dist/css/bootstrap-theme.min.css">
+	
+	<script src="js/jquery/jquery-1.10.2.min.js"></script>
+	<script src="bootstrap/dist/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+	<div class="col-md-12">
+	
+	<h1>Palette - Design</h1>
+	
+	<p>
+		Lauren Middleton
+		<br />
+		CS-50 Fall 2013
+	</p>
+	
+	<h2><a href="http://laurenmiddleton.com/palette">http://laurenmiddleton.com/palette</a></h2>
+	
+	<h2>Technologies Used</h2>
+	<p>
+		Palette is a web application implemented in HTML, CSS, JavaScript, and PHP. It utilizes 3 plugin libraries:
+		<ul>
+			<li><a href="http://jquery.com/">jQuery</a>: a JavaScript library</li>
+			<li><a href="http://getbootstrap.com/">Bootstrap</a>: a CSS/JavaScript framework for building web user interfaces; relies on jQuery</li>
+			<li><a href="http://www.dropzonejs.com/">DropzoneJS</a>: a JavaScript (and CSS) plugin for implementing drag and drop file uploading</li>
+		</ul>
+	</p>
+	
+	<p>
+		I used <a href="http://www.mamp.info/en/index.html">MAMP</a> (an application for running a local Apache/MySQL/PHP server on a Mac) to run my project locally during development (<a href="http://www.wampserver.com/en/">WAMP</a> is the Windows equivalent). These can be used to run the project's source code locally if need be.
+	</p>
+	<p>
+		I chose PHP as the server language for this project because I am more familiar with the PHP syntax and the MAMP framework than I am with Python or another language.
+	</p>
+	
+	<h2>How It Works</h2>
+	<p>
+		The DropzoneJS plugin creates and submits an upload form containing an image file using a POST request through the web browser to the PHP server. The PHP server saves the image received in the request, converts it to PNG format, and resamples it to ensure it is small enough to process quickly. The resampled PNG is then run through a color palette generating algorithm and returns the palette to the client in JSON format. The DropzoneJS plugin configuration receives this JSON response and parses it to display the image's palette in the browser window. Further user interactions with the palette swatches are handled client side in JavaScript and jQuery.
+	</p>
+	
+	<p>
+		I chose to have the server handle the color palette generation algorithm only and leave the rest of the color conversion formulas in JavaScript on the client side in order to keep the number of server requests down. The formulas for converting between Hex, HSV, and RGB are fairly standard and easily found online (see code comments for my sources) so there is not too much concern for keeping those algorithms secret; color palette generation algorithms are varied, however, so there is some value to keeping that obscured.</p>
+	
+	<h2>User Interface Layout</h2>
+	<p>
+		The user interface layout is largely based on the Bootstrap plugin's grid column features. Special classes are attached to html elements to specify the relative width of each column in the layout. See <a href="http://getbootstrap.com/examples/grid/">Bootstrap grid examples</a> for more information. I chose to use a plugin to build my layout so I could spend more time on the actual functionality of the application.
+	</p>
+	
+	<h2>Uploading</h2>
+	<p>
+		The DropzoneJS plugin enables uploads using drag and drop. The plugin is configured in JavaScript using a variety of options, and handles the POST upload of the file to the server. The dropzone options used for Palette can be found in js/main.js in the function setDropOps(); Some of the options customized for Palette are:
+	</p>
+		<ul>
+			<li><strong>accept</strong>: specifies a function that checks the image's width and height before "acceptance" and rejects the file with an error message if the width and height are too large.</li>
+			<li><strong>acceptedFiles</strong>: specifies the allowed file types</li>
+			<li><strong>init</strong>: initializes a function to execute on successful file upload that parses the JSON response from the server into html for displaying the palette swatches</li>
+			<li><strong>maxFilesize</strong>: specifies the maximum file size accepted</li>
+		</ul>
+	
+	<h2>Handling the File Server Side</h2>
+	<p>
+		Once the server receives the file, it double checks that it is one of the accepted file types and that it is under the 5MB size limit. It then converts the file to PNG format and moves it to the 'upload' folder. Next the PNG is resampled so its longest dimension is no more than 200 pixels, and the resampled image is stored in the 'resized' folder.
+	</p>
+	
+	<h2>Color Palette Algorithm</h2>
+	<p>
+		My algorithm for determining an image's color palette is fairly simple. I ran into a variety of timeout and memory issues with PHP during its development, so I focused on getting something that worked reasonably well for a variety of images; it will require additional future refinement, however.
+	</p>
+	<p>
+		The algorithm works by first initializing an array for storing the palette colors. The image's pixels are iterated through in order; the color of the first pixel is added to the array. Each subsequent pixel's RGB values are compared to the RGB values of each color already in the palette; if each of the three values have a certain factor of difference for each color already in the palette, the algorithm determines it is unique enough and adds it to the palette. The difference factor is set in a variable and can be easily tweaked. I decided on a difference factor of 50 for this implementation. This resulted in a pretty good representation of the image's colors without returning too many similar colors.
+	</p>
+	<p>
+		The downside to this approach is that images that are comprised of mostly one color hue (where all the colors that makes up the image are different shades of red, for example), will probably not be represented as well as an image with 3 or 4 distinct colors.
+	</p>
+	
+	<h2>Calculating Complement and Split Complement</h2>
+	<p>
+		These calculations are done in JavaScript client side. The complement is the color directly across on the color wheel (180 degrees), while split complements are the colors to the left and right of the complement (about 30 degrees from 180 in each direction). To calculate these, the RGB values for the color must first be converted to <a href="http://www.ncsu.edu/scivis/lessons/colormodels/color_models2.html">HSV</a> (Hue, Saturation, Value).
+	</p>
+	<p>
+		Hue represents the color family (red, blue, yellow, etc.). Saturation represents how "dominant" the hue is (high saturation yields a purer color, whereas lower saturation results in greyer values). Value represents the lightness or darkness of the color, from white to black.
+	</p>
+	<p>
+		The H (Hue) value represents where on the color wheel the color falls in degrees, so this is the value that is manipulated when calculating complement and split complement. After the H value is adjusted appropriately, the new HSV values can be converted back to RGB to represent the swatches.
+	</p>
+	
+	</div>
+	
+</body>
+	
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Palette - Documentation</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap/dist/css/bootstrap-theme.min.css">
+	
+	<script src="js/jquery/jquery-1.10.2.min.js"></script>
+	<script src="bootstrap/dist/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+	<div class="col-md-12">
+	
+	<h1>Palette - Documentation</h1>
+	
+	<p>
+		Lauren Middleton
+		<br />
+		CS-50 Fall 2013
+	</p>
+	
+	<h2><a href="http://laurenmiddleton.com/palette">http://laurenmiddleton.com/palette</a></h2>
+	
+	<h2>About</h2>
+	
+	<p>
+		Palette is a web-based tool that lets a user to discover an image's color palette and explore color palette relationships. Upload images to see a summary of their color makeup, select swatches or enter your own color to see color palette recommendations such as complement and split complement with example CSS code snippets, and convert between Hex and RGB.
+	</p>
+	
+	<h2>How To Use</h2>
+	
+	<p>Currently, Palette is only supported in <a href="https://www.google.com/intl/en/chrome/browser/">Google Chrome</a>.</p>
+	
+	<h3>Uploading An Image</h3>
+	<p>
+		To upload an image to see its color palette summary, simply drag a file to the grey dropzone, or click the dropzone and select the file you wish to use. A thumbnail of the image will appear in the dropzone. If accepted, the file will upload (its progress will be indicated with a green progress bar on the thumbnail; a green check mark will appear on success), and its color palette summary will appear to the right of the dropzone.
+	</p>
+	<p>
+		If the file is not accepted or upload fails, a red X will appear over the file thumbnail; hover over it for details on what went wrong. Files must be less than 5 MB in size, less than 2500 x 2500 pixels, and be in JPEG, GIF, or PNG format.
+	</p>
+	<p>
+		You can upload individual files one at a time, or select multiple files at once to upload.
+	</p>
+	<p>
+		There are many sample images to use in the 'samples' folder at the top level of this project's directory. None of these images belong to me, and are for sample input use only.
+	</p>
+	
+	<h3>Viewing A Palette Swatch's Color Information</h3>
+	<p>
+		Once you have uploaded an image and its color palette summary has been returned, you can start exploring the details of the individual colors. To see the information for a color in your image's palette, click its swatch. The right pane will be populated with the information for that color.
+	</p>
+	<ul>
+		<li>The HEX input field will display the 6-character hex code for the selected color.</li>
+		<li>The R, G, and B input fields will display the Red, Green, and Blue (RGB) values for the selected color.</li>
+		<li>In the 'Color' section, a larger swatch of the selected color will be displayed, as well as example CSS snippets that use the selected color in both RGB and Hex format. You can copy and paste these snippets into your own CSS code.</li>
+		<li>
+			In the 'Complement' and 'Split Complement' sections, swatches of the selected color's complement and split complements are shown. (For more on complements and split complements, see <a href="http://www.tigercolor.com/color-lab/color-theory/color-harmonies.htm">this page</a>.) If desired, click these swatches to populate the color information pane with that color.
+		</li>
+	</ul>
+	
+	<h3>Entering Your Own Color</h3>
+	<p>
+		You can enter your own color directly using the HEX or RGB input fields. The color information pane, including Complement and Split Complement swatches, will update automatically as you type. Keep in mind that valid hex codes are 3 or 6 characters in length (0-9 and A-F), and RGB values are between 0 and 255.
+	</p>
+	<p>
+		<a href="http://prettycolors.tumblr.com/">This site</a> has many examples of hex codes you can use as sample input (hover over a color square to see its hex in the top left).
+	</p>
+	
+	<h3>Converting Between Hex And RGB</h3>
+	<p>
+		To convert between Hex and RGB, simply enter your values in either the Hex or the RGB fields. The other format will be automatically filled in as you type.
+	</p>
+	
+	<h2>What's Next?</h2>
+	<p>
+		There are many additional features that could be incorporated into Palette that were beyond what I was able to accomplish in the time frame of this project. Some of these include:
+		<ul>
+			<li>Additional color wheel relationships displayed in the color information panel on the right, such as Analogous, Triadic, Tetradic, Square, Lighter, and Darker.</li>
+			<li>Refinements to the algorithm for determining the color palette that take into account how much of each color is present in the image, adjustments for images with many variations of one color hue or a lot of gradation (such as complex digital photos), and perhaps random sampling of pixels for more accuracy.</li>
+			<li>Input hyperlink to an image on the internet to get its color palette.</li>
+			<li>Support for additional browsers.</li>
+			<li>More robust handling of errors from the server.</li>
+			<li>Deletion of uploaded images off the server after they are processed.</li>
+		</ul>
+	</p>
+	
+	</div>
+	
+</body>
+	
+</html>

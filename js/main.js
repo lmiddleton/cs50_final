@@ -28,8 +28,6 @@ function setDropOps()
 			},500);
 		},
 		acceptedFiles: '.jpeg, .jpg, .gif, .png',
-		//addRemoveLinks: true,
-		dictRemoveFile: 'Remove',
 		init: function() {
 			this.on("success", function(file, response) {
 				

@@ -7,14 +7,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
 	<!-- CSS -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="bootstrap/dist/css/bootstrap-theme.min.css">
 	<link rel="stylesheet" href="js/dropzone/dropzone-3.7.3/downloads/css/dropzone.css" />
 	<link rel="stylesheet" href="css/styles.css" />
 	
 	<!-- JS -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+	<script src="js/jquery/jquery-1.10.2.min.js"></script>
+	<script src="bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/dropzone/dropzone-3.7.3/downloads/dropzone.min.js"></script>
 	<script type="text/javascript" src="js/color-functions.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
